@@ -1,0 +1,98 @@
+package com.ledo.handlers;
+
+import com.ledo.beans.GuestInfo;
+import com.ledo.beans.Page;
+import com.ledo.beans.ServerHistoryInfo;
+import com.ledo.beans.UrlContent;
+import com.ledo.common.FileManager;
+import com.ledo.common.URLManager;
+import com.ledo.service.IAdministratorService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
+/**
+ * 管理员页面 控制器
+ * @author qgl
+ * @date 2018/10/11
+ */
+@Controller
+@RequestMapping("/admin")
+public class AdministratorController {
+    @Autowired
+    @Qualifier("IAdministratorService")
+    IAdministratorService administratorService;
+
+    @RequestMapping("/adminShow.do")
+    public ModelAndView adminShow(boolean isUpdateLinuxServerInfo, String updateLinuxServerInfoDate, String userName,
+                                  boolean isUpdateRechargeInfo, String updateRechargeInfoDate, HttpServletRequest request){
+        // 若没有经过登录界面，则返回登录界面
+        if (request.getHeader(URLManager.HEADER_PARAM_REFERER) == null) {
+            return new ModelAndView("login");
+        }
+        administratorService.addGuestInfo(request, userName);
+        ModelAndView mv = new ModelAndView();
+        int linuxServerSum = administratorService.referLinuxServerInfo().size();
+        if (isUpdateLinuxServerInfo) {
+            administratorService.deleteLinuxServerInfo();
+            administratorService.updateLinuxServerInfo();
+            updateLinuxServerInfoDate = FileManager.getNowFormatDate();
+            mv.addObject("conflictSum", administratorService.queryUrlContents().size() - linuxServerSum);
+        }
+
+        if (isUpdateRechargeInfo) {
+            administratorService.deleteRechargeInfo();
+            administratorService.updateRechargeInfo();
+            updateRechargeInfoDate = FileManager.getNowFormatDate();
+
+        }
+
+        mv.addObject("updateLinuxServerInfoDate", updateLinuxServerInfoDate);
+        mv.addObject("updateRechargeInfoDate", updateRechargeInfoDate);
+        mv.addObject("linuxServerSum", linuxServerSum);
+        mv.addObject("rechargeSum", administratorService.referRechargeInfo().size());
+        mv.setViewName("adminShow");
+        return mv;
+    }
+
+    @RequestMapping("/autoUpdateUrlContent.do")
+    public ModelAndView AutoUpdateUrlContent(){
+        ModelAndView mv = new ModelAndView();
+        administratorService.updateUrlContent();
+        ArrayList<UrlContent> serverInfos = administratorService.queryUrlContents();
+        mv.addObject("serverInfos", serverInfos);
+        mv.setViewName("autoUpdateUrlContent");
+        return mv;
+    }
+
+    @RequestMapping("/autoInsertOnlineServerInfo.do")
+    public ModelAndView AutoInsertOnlineServerInfo(){
+        ModelAndView mv = new ModelAndView();
+        administratorService.addServerInfo();
+        ArrayList<ServerHistoryInfo> serverHistoryInfoByLimit = administratorService.referServerHistoryInfoByLimit25();
+        mv.addObject("serverHistoryInfoByLimit", serverHistoryInfoByLimit);
+        mv.setViewName("autoInsertOnlineServerInfo");
+        return mv;
+    }
+
+    @RequestMapping("/guestInfo.do")
+    public ModelAndView guestInfo(Page page, GuestInfo guest) {
+        ModelAndView mv = new ModelAndView();
+        Page pageInfo = URLManager.setPageInfo(page, administratorService.queryGuestInfoCountByCondition(guest));
+        guest.setPage(pageInfo);
+        ArrayList<GuestInfo> guestInfos = administratorService.queryGuestInfoByCondition(guest);
+
+        mv.addObject("guest", guest);
+        mv.addObject("page", pageInfo);
+        mv.addObject("guestInfos", guestInfos);
+        mv.setViewName("guestInfo");
+        return mv;
+    }
+}
