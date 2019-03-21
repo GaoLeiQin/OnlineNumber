@@ -1,9 +1,10 @@
 package com.ledo.service;
 
 import com.ledo.beans.*;
-import com.ledo.common.FileManager;
-import com.ledo.common.URLManager;
+import com.ledo.manager.FileManager;
+import com.ledo.manager.URLManager;
 import com.ledo.dao.*;
+import com.ledo.task.AllTask;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,8 +17,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.ledo.common.FileManager.*;
+import static com.ledo.common.FileConstant.SERVER_OPENDAYS_PATH;
 import static com.ledo.common.ServerConstant.GAT;
+import static com.ledo.common.FileConstant.RECHARGE_LOG_PATH;
+import static com.ledo.common.FileConstant.ZONE_OPT_PATH;
 
 /**
  * 管理员service 具体实现
@@ -69,10 +72,16 @@ public class AdministratorService implements IAdministratorService{
     }
 
     @Override
+    public void openAutoUpdateTask() {
+        AllTask.getInstance().openAutoUpdateTask(administratorDao, urlContentDao);
+    }
+
+    @Override
     public ArrayList<UrlContent> queryUrlContents() {
         return urlContentDao.queryUrlContents();
     }
 
+    // 更新网页内容
     @Override
     public void updateUrlContent() {
         long before = System.currentTimeMillis();
@@ -97,9 +106,7 @@ public class AdministratorService implements IAdministratorService{
         logger.info("更新网页内容需要：" + needTime + "s");
     }
 
-    /**
-     * 向历史数据中添加当前服务器在线信息
-     */
+    // 向历史数据中添加当前服务器在线信息
     @Override
     public void addServerInfo() {
         boolean isNull = urlContentDao.queryOfficialSum() == null || urlContentDao.queryMixSum() == null ||

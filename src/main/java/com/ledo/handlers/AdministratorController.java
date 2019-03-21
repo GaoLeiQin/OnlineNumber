@@ -4,8 +4,8 @@ import com.ledo.beans.GuestInfo;
 import com.ledo.beans.Page;
 import com.ledo.beans.ServerHistoryInfo;
 import com.ledo.beans.UrlContent;
-import com.ledo.common.FileManager;
-import com.ledo.common.URLManager;
+import com.ledo.manager.FileManager;
+import com.ledo.manager.URLManager;
 import com.ledo.service.IAdministratorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -26,14 +26,15 @@ import java.util.ArrayList;
 public class AdministratorController {
     private String updateLinuxServerInfoDate;
     private String updateRechargeInfoDate;
+    private boolean isOpenedTask;
     @Autowired
     @Qualifier("IAdministratorService")
     IAdministratorService administratorService;
 
     @RequestMapping("/adminShow.do")
     public ModelAndView adminShow(boolean isUpdateLinuxServerInfo, String userName,
-                                  boolean isUpdateRechargeInfo, HttpServletRequest request){
-        // 若没有经过登录界面，则返回登录界面
+                                  boolean isUpdateRechargeInfo, HttpServletRequest request, boolean isNowStartTask){
+        // 若没有经过登录界面，则返回管理员登录界面
         if (request.getHeader(URLManager.HEADER_PARAM_REFERER) == null) {
             return new ModelAndView("adminlogin");
         }
@@ -55,12 +56,34 @@ public class AdministratorController {
             updateRechargeInfoDate = FileManager.getNowFormatDate();
 
         }
+
+        if (isNowStartTask && !isOpenedTask) {
+            userName = "StartTask";
+            administratorService.openAutoUpdateTask();
+            isOpenedTask = true;
+        }
+
         administratorService.addGuestInfo(request, userName);
         mv.addObject("updateLinuxServerInfoDate", updateLinuxServerInfoDate);
         mv.addObject("updateRechargeInfoDate", updateRechargeInfoDate);
-        mv.addObject("linuxServerSum", linuxServerSum);
         mv.addObject("rechargeSum", administratorService.referRechargeInfo().size());
+        mv.addObject("linuxServerSum", linuxServerSum);
+        mv.addObject("isOpenedTask", isOpenedTask);
         mv.setViewName("adminShow");
+        return mv;
+    }
+
+    @RequestMapping("/guestInfo.do")
+    public ModelAndView guestInfo(Page page, GuestInfo guest) {
+        ModelAndView mv = new ModelAndView();
+        Page pageInfo = URLManager.setPageInfo(page, administratorService.queryGuestInfoCountByCondition(guest));
+        guest.setPage(pageInfo);
+        ArrayList<GuestInfo> guestInfos = administratorService.queryGuestInfoByCondition(guest);
+
+        mv.addObject("guest", guest);
+        mv.addObject("page", pageInfo);
+        mv.addObject("guestInfos", guestInfos);
+        mv.setViewName("guestInfo");
         return mv;
     }
 
@@ -81,20 +104,6 @@ public class AdministratorController {
         ArrayList<ServerHistoryInfo> serverHistoryInfoByLimit = administratorService.referServerHistoryInfoByLimit25();
         mv.addObject("serverHistoryInfoByLimit", serverHistoryInfoByLimit);
         mv.setViewName("autoInsertOnlineServerInfo");
-        return mv;
-    }
-
-    @RequestMapping("/guestInfo.do")
-    public ModelAndView guestInfo(Page page, GuestInfo guest) {
-        ModelAndView mv = new ModelAndView();
-        Page pageInfo = URLManager.setPageInfo(page, administratorService.queryGuestInfoCountByCondition(guest));
-        guest.setPage(pageInfo);
-        ArrayList<GuestInfo> guestInfos = administratorService.queryGuestInfoByCondition(guest);
-
-        mv.addObject("guest", guest);
-        mv.addObject("page", pageInfo);
-        mv.addObject("guestInfos", guestInfos);
-        mv.setViewName("guestInfo");
         return mv;
     }
 }

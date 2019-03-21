@@ -133,7 +133,7 @@
 <h2 style="color: #2d57e5 " align="center">
         《拳皇世界》服务器 <fmt:formatDate value="<%=new Date() %>" pattern="yyyy-MM-dd HH:mm:ss"/> 在线信息</h2>
 
-<font color="#00008b" style="margin-left: 45%"> （建议刷新的间隔时间 > 2分钟） </font>
+<font color="#00008b" style="margin-left: 45%"> （建议刷新的间隔时间 > 60s） </font>
 
 <div style="opacity: 0.8 ">
     <input class="history" type="button" value="在线历史信息"  onclick="javasript:window.open('historyByCondition.do')"/> &nbsp; &nbsp;

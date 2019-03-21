@@ -3,9 +3,8 @@ package com.ledo.handlers;
 import com.ledo.beans.Page;
 import com.ledo.beans.ServerHistoryInfo;
 import com.ledo.beans.UrlContent;
-import com.ledo.common.FileManager;
-import com.ledo.common.Task;
-import com.ledo.common.URLManager;
+import com.ledo.manager.FileManager;
+import com.ledo.manager.URLManager;
 import com.ledo.service.IOnlineNumberService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,37 +67,7 @@ public class GuestController {
         mv.addObject("serverHistoryInfos", historyInfos);
         mv.setViewName("history");
 
-//        Task task = new Task(4);
-//        task.startScheduleRateTask(new SaveServerInfoTask(5));
-//        task.startScheduleDelayTask(new SaveUrlContentTask(8));
-
         return mv;
-    }
-
-    public class SaveServerInfoTask implements Runnable {
-        private int count;
-
-        public SaveServerInfoTask(int count) {
-            this.count = count;
-        }
-
-        @Override
-        public void run() {
-            Logger.getLogger(GuestController.class).info(" 保存服务器信息！" + count);
-        }
-    }
-
-    public class SaveUrlContentTask implements Runnable {
-        private int count;
-
-        public SaveUrlContentTask(int count) {
-            this.count = count;
-        }
-
-        @Override
-        public void run() {
-            System.out.println(FileManager.getNowFormatDate() + " 存储网页内容：" + count);
-        }
     }
 
 }

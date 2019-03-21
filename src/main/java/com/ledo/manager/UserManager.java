@@ -1,4 +1,4 @@
-package com.ledo.common;
+package com.ledo.manager;
 
 import java.util.ArrayList;
 

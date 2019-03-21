@@ -1,7 +1,7 @@
 package com.ledo.handlers;
 
 import com.ledo.beans.User;
-import com.ledo.common.UserManager;
+import com.ledo.manager.UserManager;
 import com.ledo.service.IOnlineNumberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

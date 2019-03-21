@@ -40,4 +40,7 @@ public interface IAdministratorService {
     ArrayList<GuestInfo> queryGuestInfoByCondition(GuestInfo guestInfo);
     /** 根据条件查询结果条数（处理分页时需要使用的数据）*/
     Integer queryGuestInfoCountByCondition(GuestInfo guestInfo);
+
+    /** 开启自动更新任务 */
+    void openAutoUpdateTask();
 }

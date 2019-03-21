@@ -1,4 +1,3 @@
-<%--<%@ include file="queryData.jsp" %>--%>
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -12,6 +11,18 @@
 </head>
 
 <style type="text/css">
+
+    .openAutoUpdateTask {
+        background-color: #f81e10;
+        border: 2px;
+        color: #070707;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        font-size: 16px;
+        border-radius: 12px;
+        box-shadow: 0 8px 16px 0 rgba(248, 30, 16, 0.2), 0 6px 20px 0 rgba(248, 30, 16, 0.19);
+    }
 
     .autoUrlContent {
         background-color: #ee1d10;
@@ -94,14 +105,18 @@
            onclick="javasript:window.open('autoUpdateUrlContent.do')"/> &nbsp; &nbsp;
     <input class="autoHistory" type="button" value="自动更新数据网页"
            onclick="javasript:window.open('autoInsertOnlineServerInfo.do')"/> &nbsp; &nbsp;
-    <br><br><br><<br>
-    <input class="queryRechargeInfo" type="button" value="点击查询充值信息" onclick="javasript:window.open('/KofWorld/recharge/rechargeInfo.do')"/> &nbsp; &nbsp;
-    <input class="updateRecharge" type="button" value="更新服务器充值数据" method="post" onclick="updateRechargeInfo()"/> &nbsp;
-    &nbsp;
-    <%--充值信息一共 ${rechargeSum} 条 &nbsp; &nbsp;--%>
-    <%--<c:if test="${not empty updateRechargeInfoDate}">--%>
-        <%--上次充值信息更新时间：${updateRechargeInfoDate}--%>
-    <%--</c:if>--%>
+
+    <c:if test="${!isOpenedTask}">
+        <input class="openAutoUpdateTask" type="button" value="开启自动更新定时任务" method="post" onclick="openAutoUpdateTask()"/>
+    </c:if>
+
+    <br><br><br><br>
+    <input class="queryRechargeInfo" type="button" value="点击查询充值信息" method="post" onclick="queryRechargeInfo()"/> &nbsp; &nbsp;
+    <input class="updateRecharge" type="button" value="更新服务器充值数据" method="post" onclick="updateRechargeInfo()"/> &nbsp;&nbsp;
+    充值信息一共 ${rechargeSum} 条 &nbsp; &nbsp;
+    <c:if test="${not empty updateRechargeInfoDate}">
+        上次充值信息更新时间：${updateRechargeInfoDate}
+    </c:if>
     <br><br><br><br>
     <input class="queryGuestInfo" type="button" value="点击查询访客信息" onclick="javasript:window.open('guestInfo.do')"/> &nbsp; &nbsp;
     <input class="updateLinuxInfo" type="button" value="更新Linux服务器信息" onclick="updateLinuxServerInfo()"/> &nbsp; &nbsp;
@@ -119,13 +134,23 @@
 
 </div>
 <script type="text/javascript">
+    function openAutoUpdateTask() {
+        var shref = "${pageContext.request.contextPath}/admin/adminShow.do?isNowStartTask=true";
+        window.location.href = shref;
+    }
+
     function updateLinuxServerInfo() {
-        var shref = "adminShow.do?isUpdateLinuxServerInfo=true";
+        var shref = "${pageContext.request.contextPath}/admin/adminShow.do?isUpdateLinuxServerInfo=true";
+        window.location.href = shref;
+    }
+
+    function queryRechargeInfo() {
+        var shref = "${pageContext.request.contextPath}/recharge/rechargeInfo.do";
         window.location.href = shref;
     }
 
     function updateRechargeInfo() {
-        var shref = "adminShow.do?isUpdateRechargeInfo=true";
+        var shref = "${pageContext.request.contextPath}/admin/adminShow.do?isUpdateRechargeInfo=true";
         window.location.href = shref;
     }
 </script>

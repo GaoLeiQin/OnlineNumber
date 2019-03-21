@@ -1,4 +1,4 @@
-import com.ledo.common.FileManager;
+import com.ledo.manager.FileManager;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 

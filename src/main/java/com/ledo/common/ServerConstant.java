@@ -1,7 +1,7 @@
 package com.ledo.common;
 
 /**
- * 用到的一些常量
+ * 服务器信息常量
  * @author qgl
  * @date 2018/9/24
  */

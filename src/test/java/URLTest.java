@@ -15,7 +15,7 @@ public class URLTest {
 
     /**
      一、 mvn 测试命令
-     1. mvn test  运行test.java文件夹下所有测试类
+     1. mvn test  编译项目代码，并运行test/java文件夹下所有测试类
      2. mvn test -Dtest=URLTest 只运行URLTest测试类
      3. mvn test -Dtest=URLTest#firstTest 只运行URLTest类的firstTest测试方法
      4. mvn test -Dtest=RandomTest,Random2Test 指定运行多个类

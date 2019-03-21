@@ -1,4 +1,4 @@
-import com.ledo.common.Task;
+import com.ledo.task.Task;
 import org.junit.Test;
 
 /**
@@ -14,9 +14,6 @@ public class TaskTest {
 
     @Test
     public void sqlTest() {
-        Task task = new Task(4);
-        task.startScheduleRateTask(new SaveServerInfoTask(5));
-        task.startScheduleDelayTask(new SaveUrlContentTask(8));
     }
 
     public class SaveServerInfoTask implements Runnable {

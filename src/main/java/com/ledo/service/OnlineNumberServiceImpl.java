@@ -4,7 +4,7 @@ import com.ledo.beans.Page;
 import com.ledo.beans.ServerHistoryInfo;
 import com.ledo.beans.UrlContent;
 import com.ledo.beans.User;
-import com.ledo.common.URLManager;
+import com.ledo.manager.URLManager;
 import com.ledo.dao.IGuest;
 import com.ledo.dao.IOnlineNumber;
 import com.ledo.dao.IUrlContent;

@@ -1,9 +1,7 @@
 package com.ledo.service;
 
 import com.ledo.beans.AllServerInfo;
-import com.ledo.beans.Page;
 import com.ledo.beans.UrlContent;
-import com.ledo.common.FileManager;
 import com.ledo.dao.IAllServer;
 import com.ledo.dao.IUrlContent;
 import org.apache.log4j.Logger;
@@ -11,15 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
-import static com.ledo.common.FileManager.RECHARGE_LOG_PATH;
-import static com.ledo.common.FileManager.ZONE_OPT_PATH;
+import static com.ledo.common.FileConstant.RECHARGE_LOG_PATH;
+import static com.ledo.common.FileConstant.ZONE_OPT_PATH;
 
 /** 更新全部服务器信息
  * @author qgl
