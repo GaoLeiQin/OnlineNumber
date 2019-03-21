@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ledo.dao.IGuest">
+
+    <insert id="insertGuestInfo" parameterType="GuestInfo">
+		insert into guest_info4(date,userName,type,ip,userAgent)
+		values(#{date},#{userName},#{type},#{ip},#{userAgent})
+	</insert>
+
+    <select id="queryGuestInfo" resultType="GuestInfo">
+		select date,userName,type,ip,userAgent from guest_info4 order by id desc
+	</select>
+
+    <select id="queryGuestInfoByCondition" parameterType="GuestInfo" resultType="GuestInfo">
+        select date,userName,type,ip,userAgent from guest_info4
+        <where>
+            <if test="date != null and date != ''">
+                date like CONCAT('%',#{date},'%')
+            </if>
+            <if test="userName != null and userName != ''">
+                and userName like CONCAT('%',#{userName},'%')
+            </if>
+            <if test="type != null and type != ''">
+                and type like CONCAT('%',#{type},'%')
+            </if>
+            <if test="ip != null and ip != ''">
+                and ip like CONCAT('%',#{ip},'%')
+            </if>
+            <if test="userAgent != null and userAgent != ''">
+                and userAgent like CONCAT('%',#{userAgent},'%')
+            </if>
+        </where>
+
+        order by id desc
+
+        <if test="page != null">
+            limit #{page.startRow},#{page.pageSize}
+        </if>
+    </select>
+
+    <select id="queryGuestInfoCountByCondition" parameterType="GuestInfo" resultType="Integer">
+        select count(*) from guest_info4
+        <where>
+            <if test="date != null and date != ''">
+                date like CONCAT('%',#{date},'%')
+            </if>
+            <if test="userName != null and userName != ''">
+                and userName like CONCAT('%',#{userName},'%')
+            </if>
+            <if test="type != null and type != ''">
+                and type like CONCAT('%',#{type},'%')
+            </if>
+            <if test="ip != null and ip != ''">
+                and ip like CONCAT('%',#{ip},'%')
+            </if>
+            <if test="userAgent != null and userAgent != ''">
+                and userAgent like CONCAT('%',#{userAgent},'%')
+            </if>
+        </where>
+    </select>
+
+</mapper>
