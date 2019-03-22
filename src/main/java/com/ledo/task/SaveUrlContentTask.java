@@ -45,4 +45,9 @@ public class SaveUrlContentTask extends Task{
 
         logger.warn("QHSJSERVERINFO " + urlContentDao.queryUrlContents());
     }
+
+    @Override
+    public void setThreadName(String threadName) {
+        this.setName(threadName);
+    }
 }

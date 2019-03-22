@@ -84,8 +84,6 @@ public class AdministratorService implements IAdministratorService{
     // 更新网页内容
     @Override
     public void updateUrlContent() {
-        long before = System.currentTimeMillis();
-        // 先删除之前的旧数据，然后再更新
         urlContentDao.deleteUrlContent();
         boolean isGAT = false;
         for (Map.Entry<String, URL> urls : URLManager.getInstance().getUrl().entrySet()) {
@@ -102,8 +100,6 @@ public class AdministratorService implements IAdministratorService{
 
         logger.warn("QHSJSERVERINFO " + urlContentDao.queryUrlContents());
         long now = System.currentTimeMillis();
-        double needTime = Double.valueOf(now - before) / 1000;
-        logger.info("更新网页内容需要：" + needTime + "s");
     }
 
     // 向历史数据中添加当前服务器在线信息

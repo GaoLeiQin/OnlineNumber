@@ -1,4 +1,4 @@
-import com.ledo.task.Task;
+import com.ledo.manager.FileManager;
 import org.junit.Test;
 
 /**
@@ -6,14 +6,16 @@ import org.junit.Test;
  * @author qgl
  * @date 2018/11/13
  */
-public class TaskTest {
+public class TaskTest extends BaseTest {
+
 
     @Test
     public void test() {
-    }
-
-    @Test
-    public void sqlTest() {
+        long now = System.currentTimeMillis();
+        logger.info(now);
+        logger.info(FileManager.getMilliSecondByFormatDate("2018-11-14 13:39:00") % 60000);
+        logger.info(FileManager.getMilliSecondByFormatDate("2018-11-14 13:40:00") % 60000);
+        logger.info(FileManager.getMilliSecondByFormatDate("2018-11-14 13:41:00") % 60000);
     }
 
     public class SaveServerInfoTask implements Runnable {

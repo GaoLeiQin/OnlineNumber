@@ -102,18 +102,14 @@ public class FileManager {
      * @param strTime 字符串
      * @return 毫秒
      */
-    public static ArrayList<Long> getMilliSecondByFormatDate(ArrayList<String> strTime) {
-        ArrayList<Long> milliSecondList = new ArrayList<>(25);
-        for (String time : strTime) {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            try {
-                long date = simpleDateFormat.parse(time).getTime();
-                milliSecondList.add(date);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+    public static long getMilliSecondByFormatDate(String strTime) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            return simpleDateFormat.parse(strTime).getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
-        return milliSecondList;
+        return 0;
     }
 
     /**

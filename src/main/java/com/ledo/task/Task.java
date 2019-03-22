@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
  * @author qgl
  * @date 2018/11/13
  */
-public class Task implements Runnable {
+public abstract class Task extends Thread {
     public Logger logger = Logger.getLogger(AllTask.class);
 
     public IAdministrator administratorDao;
@@ -19,4 +19,7 @@ public class Task implements Runnable {
     public void run() {
 
     }
+
+    /** 设置线程名称 */
+    public abstract void setThreadName(String threadName);
 }

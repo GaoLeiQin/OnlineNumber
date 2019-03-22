@@ -19,7 +19,7 @@ public class SaveServerInfoTask extends Task {
 
     @Override
     public void run() {
-        addServerInfo();
+        this.addServerInfo();
     }
 
     /**
@@ -35,6 +35,11 @@ public class SaveServerInfoTask extends Task {
             logger.error(" &$& 删除数据库，网页访问为空的数据：" + server);
         }
         administratorDao.insertServerInfo(server);
+    }
+
+    @Override
+    public void setThreadName(String threadName) {
+        this.setName(threadName);
     }
 
 }
