@@ -21,5 +21,7 @@ public abstract class Task extends Thread {
     }
 
     /** 设置线程名称 */
-    public abstract void setThreadName(String threadName);
+    public void setThreadName(String threadName) {
+        this.setName(threadName);
+    }
 }

@@ -4,9 +4,8 @@ import com.ledo.dao.IAdministrator;
 import com.ledo.dao.IUrlContent;
 import org.apache.log4j.Logger;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.ledo.common.ThreadContant.*;
 
@@ -17,59 +16,88 @@ import static com.ledo.common.ThreadContant.*;
  */
 public class AllTask {
     private Logger logger = Logger.getLogger(AllTask.class);
-    private static final AllTask instance = new AllTask();
-    private static final int CORE_POOL_SIZE = 2;
-    private ScheduledExecutorService scheduledExecutor = null;
+    private static AllTask instance = new AllTask();
+    private ScheduledThreadPoolExecutor scheduledExecutor = null;
 
     public static AllTask getInstance() {
         return instance;
     }
 
     /**
-     * 开启自动更新任务（网页内容，添加服务器信息）
+     * 开启自动更新任务（包括网页内容和添加服务器信息）
      * @param administratorDao
      * @param urlContentDao
      */
-    public void openAutoUpdateTask(IAdministrator administratorDao, IUrlContent urlContentDao) {
-        // 16:09:26
-        // 16:19:26
-        scheduledExecutor = Executors.newScheduledThreadPool(CORE_POOL_SIZE);
+    public void startAutoUpdateTask(IAdministrator administratorDao, IUrlContent urlContentDao) {
+        scheduledExecutor = new ScheduledThreadPoolExecutor(CORE_POOL_SIZE, new MyThreadFactory(NAME_PREVIOUS_UPDATE_DATA_POOL));
         SaveUrlContentTask urlContentTask = new SaveUrlContentTask(urlContentDao);
         urlContentTask.setThreadName(URLCONTENT_THREAD_NAME);
-        printThreadInfo(urlContentTask, "URL 之前：");
         SaveServerInfoTask serverInfoTask = new SaveServerInfoTask(administratorDao, urlContentDao);
         serverInfoTask.setThreadName(SERVERINFO_THREAD_NAME);
-        printThreadInfo(serverInfoTask, "Server 之前：");
 
         long beforeTime = System.currentTimeMillis();
-        boolean isOtherTime = true;
-        while (isOtherTime) {
+        boolean isCheckPeriod = true;
+        while (isCheckPeriod) {
             long now = System.currentTimeMillis();
             boolean isTimeOut = now - beforeTime > MONITOR_TIME_OUT;
             if (now % SAVE_SERVER_INFO_PERIOD < MAX_ERROR_RANGE || isTimeOut) {
+                isCheckPeriod = false;
                 scheduledExecutor.scheduleAtFixedRate(urlContentTask, URLCONTENT_TASK_INITIALDELAY, SAVE_URLCONTENT_PERIOD, TimeUnit.MILLISECONDS);
                 scheduledExecutor.scheduleAtFixedRate(serverInfoTask, SAVE_SERVER_INFO_PERIOD, SAVE_SERVER_INFO_PERIOD, TimeUnit.MILLISECONDS);
                 logger.info("开启定时任务成功！");
-                printThreadInfo(urlContentTask, "URL 启动后：");
-                printThreadInfo(serverInfoTask, "Server 启动后：");
-                isOtherTime = false;
+            }
+
+            if (isTimeOut) {
+                logger.error(" 立即开启任务！！！，(TimeOut) 已经寻找了 " + MONITOR_TIME_OUT + " ms，但没有找到合适的时间开启线程！");
             }
         }
-
     }
 
     /**
-     * 重启线程
+     * 监视线程任务
+     * @param administratorDao
+     * @param urlContentDao
      */
-    public void restart(Task task) {
-        task.interrupt();
+    public void executeMonitorThreadTask(IAdministrator administratorDao, IUrlContent urlContentDao) {
+        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor(new MyThreadFactory(NAME_PREVIOUS_MONITOR_POOL));
+        MonitorThreadPoolTask monitorThreadPoolTask = new MonitorThreadPoolTask(this.scheduledExecutor, administratorDao, urlContentDao);
+        monitorThreadPoolTask.setThreadName(MONITOR_THREAD_NAME);
+        executorService.scheduleAtFixedRate(monitorThreadPoolTask, HOUR, HOUR, TimeUnit.MILLISECONDS);
+        logger.info("监视线程已启动！");
     }
 
-    public void printThreadInfo(Thread thread, String message) {
-//        线程名称：UrlContentTask 线程Id：69 线程优先级：5 线程状态：NEW 线程组：java.lang.ThreadGroup[name=main,maxpri=10]，isAlive：false，isDaemon：true，isInterrupted：false
-//        线程名称：ServerInfoTask 线程Id：70 线程优先级：5 线程状态：NEW 线程组：java.lang.ThreadGroup[name=main,maxpri=10]，isAlive：false，isDaemon：true，isInterrupted：false
-        logger.info(message + " ，线程名称：" + thread.getName() + "，线程Id：" + thread.getId() + "，线程优先级：" + thread.getPriority() +
-                " ，线程状态：" + thread.getState() + " ，线程组：" + thread.getThreadGroup() + "，isAlive："+ thread.isAlive() +
-                "，isDaemon：" + thread.isDaemon() + "，isInterrupted：" + thread.isInterrupted());
+    /**
+     * 自定义 ThreadFactory，可设置线程池名称
+     */
+    private class MyThreadFactory implements ThreadFactory {
+        private final AtomicInteger poolNumber = new AtomicInteger(1);
+        private final ThreadGroup group;
+        private final AtomicInteger threadNumber = new AtomicInteger(1);
+        private final String namePrefix;
+
+        MyThreadFactory(String namePre) {
+            SecurityManager scheduledExecutor = System.getSecurityManager();
+            group = (scheduledExecutor != null) ? scheduledExecutor.getThreadGroup() :
+                    Thread.currentThread().getThreadGroup();
+            namePrefix = namePre + " pool-" +
+                    poolNumber.getAndIncrement() +
+                    "-thread-";
+        }
+
+        @Override
+        public Thread newThread(Runnable r) {
+            Thread t = new Thread(group, r, namePrefix + threadNumber.getAndIncrement(), 0);
+            t.setDaemon(false);
+            t.setPriority(Thread.NORM_PRIORITY);
+            return t;
+        }
+    }
+
+    /**
+     * 获取线程池对象
+     * @return
+     */
+    public ScheduledThreadPoolExecutor getScheduledExecutor() {
+        return scheduledExecutor;
     }
 }

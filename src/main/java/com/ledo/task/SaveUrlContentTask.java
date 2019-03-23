@@ -1,6 +1,7 @@
 package com.ledo.task;
 
 import com.ledo.beans.UrlContent;
+import com.ledo.common.ThreadContant;
 import com.ledo.dao.IUrlContent;
 import com.ledo.manager.URLManager;
 
@@ -44,10 +45,5 @@ public class SaveUrlContentTask extends Task{
         }
 
         logger.warn("QHSJSERVERINFO " + urlContentDao.queryUrlContents());
-    }
-
-    @Override
-    public void setThreadName(String threadName) {
-        this.setName(threadName);
     }
 }

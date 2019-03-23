@@ -73,7 +73,9 @@ public class AdministratorService implements IAdministratorService{
 
     @Override
     public void openAutoUpdateTask() {
-        AllTask.getInstance().openAutoUpdateTask(administratorDao, urlContentDao);
+        AllTask.getInstance().startAutoUpdateTask(administratorDao, urlContentDao);
+        AllTask.getInstance().executeMonitorThreadTask(administratorDao, urlContentDao);
+
     }
 
     @Override
@@ -194,10 +196,10 @@ public class AdministratorService implements IAdministratorService{
                 // 保存Linux服务器相关数据
                 administratorDao.insertLinuxServerInfo(new AllServerInfo(channel, zoneId, serverName, optOrId, ip, hostName, content.getOnlineNum(), openTime, openDays));
             }else {
-                System.out.println("更新Linux信息失败:" + zoneId + " " + hostName);
+                logger.info("更新Linux信息失败:" + zoneId + " " + hostName);
             }
         }else {
-            System.out.println("新开服:" + zoneId + " " + serverName);
+            logger.info("新开服:" + zoneId + " " + serverName);
             administratorDao.insertLinuxServerInfo(new AllServerInfo(channel, zoneId, serverName, optOrId, "新开服", "Opt Or ID、IP、HostName待更新", content.getOnlineNum(), openTime, openDays));
         }
     }

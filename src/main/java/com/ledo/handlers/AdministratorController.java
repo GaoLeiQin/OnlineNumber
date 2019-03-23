@@ -58,9 +58,11 @@ public class AdministratorController {
         }
 
         if (isNowStartTask && !isOpenedTask) {
+            isOpenedTask = true;
             userName = "StartTask";
             administratorService.openAutoUpdateTask();
-            isOpenedTask = true;
+            String waitingTime = FileManager.getRemainSecondsByNowTime();
+            mv.addObject("waitingTime", waitingTime);
         }
 
         administratorService.addGuestInfo(request, userName);

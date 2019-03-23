@@ -29,17 +29,12 @@ public class SaveServerInfoTask extends Task {
         ServerHistoryInfo server = new ServerHistoryInfo(FileManager.getNowFormatDate(), urlContentDao.queryOfficialSum(), urlContentDao.queryMixSum(),
                 urlContentDao.queryGatSum(), urlContentDao.queryAllSum());
 
-        boolean isNull = urlContentDao.queryOfficialSum() == null || urlContentDao.queryMixSum() == null ||
+        boolean isUrlContentNull = urlContentDao.queryOfficialSum() == null || urlContentDao.queryMixSum() == null ||
                 urlContentDao.queryGatSum() == null || urlContentDao.queryAllSum() == null;
-        if (isNull) {
+        if (isUrlContentNull) {
             logger.error(" &$& 删除数据库，网页访问为空的数据：" + server);
         }
         administratorDao.insertServerInfo(server);
-    }
-
-    @Override
-    public void setThreadName(String threadName) {
-        this.setName(threadName);
     }
 
 }

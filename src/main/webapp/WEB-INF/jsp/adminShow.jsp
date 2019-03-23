@@ -135,6 +135,7 @@
 </div>
 <script type="text/javascript">
     function openAutoUpdateTask() {
+        alert("还需：${waitingTime} 后才能开启线程，请耐心等待......");
         var shref = "${pageContext.request.contextPath}/admin/adminShow.do?isNowStartTask=true";
         window.location.href = shref;
     }

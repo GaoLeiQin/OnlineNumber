@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.ledo.common.ThreadContant.MINUTE;
+
 /**
  * 文件相关操作
  * @author qgl
@@ -30,8 +32,32 @@ public class FileManager {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        openDays = getFormatTime(now - openTime);
+        openDays = getRemainDays(now - openTime);
         return openDays;
+    }
+
+    /**
+     * 将毫秒数转换为 x天
+     * @param time
+     * @return
+     */
+    private static int getRemainDays(long time) {
+        long second = time / 1000;
+        long minute = 0;
+        long hour = 0;
+        long day = 0;
+
+        if (second > 60) {
+            minute = second / 60;
+            if (minute > 60) {
+                hour = minute / 60;
+                if (hour > 24) {
+                    day = hour / 24;
+                }
+            }
+        }
+
+        return (int) day;
     }
 
     /**
@@ -39,7 +65,8 @@ public class FileManager {
      * @param time
      * @return
      */
-    private static int getFormatTime(long time) {
+    public static String getRemainTime(long time) {
+        String remainTime = null;
         long second = time / 1000;
         long minute = 0;
         long hour = 0;
@@ -58,7 +85,32 @@ public class FileManager {
             }
         }
 
-        return (int) day;
+        if (day > 0) {
+            remainTime = day + " 天" + hour + " 小时" + minute + " 分钟" + second + " 秒";
+        }else if (hour > 0) {
+            remainTime = hour + " 小时" + minute + " 分钟" + second + " 秒";
+        }else if (minute > 0) {
+            remainTime = minute + " 分钟" + second + " 秒";
+        }else{
+            remainTime = second + " 秒";
+        }
+
+        return remainTime;
+    }
+
+    /**
+     * 获取当前距离整点（xx:x0:00）的时间
+     * @return
+     */
+    public static String getRemainSecondsByNowTime() {
+        String remainSeconds = null;
+        long now = System.currentTimeMillis();
+        for (long i = now; i < now + MINUTE; i++) {
+            if (i % MINUTE == 0) {
+                remainSeconds = getRemainTime(i - now);
+            }
+        }
+        return remainSeconds;
     }
 
     /**
