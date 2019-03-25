@@ -1,4 +1,5 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8" %>
+<%@ page import="com.ledo.manager.FileManager" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
@@ -135,9 +136,12 @@
 </div>
 <script type="text/javascript">
     function openAutoUpdateTask() {
-        alert("还需：${waitingTime} 后才能开启线程，请耐心等待......");
-        var shref = "${pageContext.request.contextPath}/admin/adminShow.do?isNowStartTask=true";
-        window.location.href = shref;
+        var isOpen = false;
+        <% String waitingTime = FileManager.getWaitingTime(); %>
+        if (confirm("还需：<%=waitingTime%> 后才能开启线程，请耐心等待......")) {
+            isOpen = true;
+        }
+        window.location.href = "${pageContext.request.contextPath}/admin/adminShow.do?isNowStartTask=" + isOpen;
     }
 
     function updateLinuxServerInfo() {

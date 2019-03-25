@@ -10,6 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.ledo.common.ThreadContant.MINUTE;
+import static com.ledo.common.ThreadContant.SAVE_SERVER_INFO_PERIOD;
 
 /**
  * 文件相关操作
@@ -90,7 +91,7 @@ public class FileManager {
         }else if (hour > 0) {
             remainTime = hour + " 小时" + minute + " 分钟" + second + " 秒";
         }else if (minute > 0) {
-            remainTime = minute + " 分钟" + second + " 秒";
+            remainTime = minute + " 分" + second + " 秒";
         }else{
             remainTime = second + " 秒";
         }
@@ -102,14 +103,16 @@ public class FileManager {
      * 获取当前距离整点（xx:x0:00）的时间
      * @return
      */
-    public static String getRemainSecondsByNowTime() {
+    public static String getWaitingTime() {
         String remainSeconds = null;
         long now = System.currentTimeMillis();
-        for (long i = now; i < now + MINUTE; i++) {
-            if (i % MINUTE == 0) {
+        System.out.println(getFormatDateByMillSecond(String.valueOf(now)));
+        for (long i = now; i < now + SAVE_SERVER_INFO_PERIOD; i++) {
+            if (i % SAVE_SERVER_INFO_PERIOD == 0) {
                 remainSeconds = getRemainTime(i - now);
             }
         }
+        System.out.println(remainSeconds);
         return remainSeconds;
     }
 

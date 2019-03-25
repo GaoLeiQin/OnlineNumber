@@ -39,6 +39,7 @@ public class AdministratorController {
             return new ModelAndView("adminlogin");
         }
 
+        userName = userName == null ? "Other" : userName;
         ModelAndView mv = new ModelAndView();
         int linuxServerSum = administratorService.referLinuxServerInfo().size();
         if (isUpdateLinuxServerInfo) {
@@ -61,8 +62,6 @@ public class AdministratorController {
             isOpenedTask = true;
             userName = "StartTask";
             administratorService.openAutoUpdateTask();
-            String waitingTime = FileManager.getRemainSecondsByNowTime();
-            mv.addObject("waitingTime", waitingTime);
         }
 
         administratorService.addGuestInfo(request, userName);
