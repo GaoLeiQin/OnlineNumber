@@ -8,7 +8,7 @@ import com.ledo.manager.URLManager;
 import java.net.URL;
 import java.util.Map;
 
-import static com.ledo.common.ServerConstant.GAT;
+import static com.ledo.common.URLConstant.GAT;
 
 /**
  * 保存网页内容定时线程

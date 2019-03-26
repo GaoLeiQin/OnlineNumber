@@ -1,6 +1,6 @@
 package com.ledo.task;
 
-import com.ledo.dao.IAdministrator;
+import com.ledo.dao.IOnlineNumber;
 import com.ledo.dao.IUrlContent;
 import org.apache.log4j.Logger;
 
@@ -12,7 +12,7 @@ import org.apache.log4j.Logger;
 public abstract class Task extends Thread {
     public Logger logger = Logger.getLogger(AllTask.class);
 
-    public IAdministrator administratorDao;
+    public IOnlineNumber onlineNumberDao;
     public IUrlContent urlContentDao;
 
     @Override

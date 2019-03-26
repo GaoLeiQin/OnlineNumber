@@ -3,17 +3,28 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ledo.dao.IAllServer">
 
+	<!--删除Linux服务器信息-->
+	<delete id="deleteLinuxServerInfo">
+		delete from all_server_info
+	</delete>
+
+	<!--插入Linux服务器相关信息-->
+	<insert id="insertLinuxServerInfo" parameterType="AllServerInfo">
+		insert into all_server_info(channel,zoneId,serverName,optOrId,ip,hostName,onlineNum,openTime,openDays)
+		values(#{channel},#{zoneId},#{serverName},#{optOrId},#{ip},#{hostName},#{onlineNum},#{openTime},#{openDays});
+	</insert>
+
 	<!--只更新Linux服务器的在线人数信息-->
 	<update id="updateOnlineNumbersInfo">
-		update all_serverinfo_test4 set onlineNum = #{onlineNum} where zoneId = #{zoneId};
+		update all_server_info set onlineNum = #{onlineNum} where zoneId = #{zoneId};
 	</update>
 
 	<select id="queryAllServerInfo" resultType="AllServerInfo">
-		select channel,zoneId,serverName,optOrId,ip,hostName,onlineNum,openTime,openDays from all_serverinfo_test4;
+		select channel,zoneId,serverName,optOrId,ip,hostName,onlineNum,openTime,openDays from all_server_info;
 	</select>
 
 	<select id="queryByCondition" parameterType="AllServerInfo" resultType="AllServerInfo">
-		select channel,zoneId,serverName,optOrId,ip,hostName,onlineNum,openTime,openDays from all_serverinfo_test4
+		select channel,zoneId,serverName,optOrId,ip,hostName,onlineNum,openTime,openDays from all_server_info
 		<where>
 			<if test = "channel != null and channel != ''">
 				channel like  CONCAT('%',#{channel},'%')

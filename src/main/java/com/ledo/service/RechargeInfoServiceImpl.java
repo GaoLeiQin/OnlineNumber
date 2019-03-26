@@ -1,14 +1,13 @@
 package com.ledo.service;
 
-import com.ledo.beans.Page;
 import com.ledo.beans.RechargeInfo;
 import com.ledo.dao.IRecharge;
+import com.ledo.manager.FileManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import static com.ledo.common.FileConstant.RECHARGE_LOG_PATH;
 
 /**
  * 查询充值数据service
@@ -16,7 +15,7 @@ import static com.ledo.common.FileConstant.RECHARGE_LOG_PATH;
  * @date 2018/10/9
  */
 @Service("rechargeInfoService")
-public class RechargeInfoServiceImpl implements IRechargeInfoService{
+public class RechargeInfoServiceImpl extends BaseService implements IRechargeInfoService{
     @Autowired
     @Qualifier("IRecharge")
     private IRecharge rechargeDao;
@@ -27,8 +26,26 @@ public class RechargeInfoServiceImpl implements IRechargeInfoService{
     }
 
     @Override
-    public ArrayList<RechargeInfo> referRechargeInfoByPage(Page page) {
-        return rechargeDao.queryRechargeInfoByPage(page);
+    public ArrayList<RechargeInfo> referRechargeInfoByPage(RechargeInfo rechargeInfo) {
+        return rechargeDao.queryRechargeInfoByPage(rechargeInfo);
+    }
+
+    @Override
+    public Integer referRechargeInfoCountByCondition(RechargeInfo rechargeInfo) {
+        return rechargeDao.queryRechargeInfoCountByCondition(rechargeInfo);
+    }
+
+    @Override
+    public void deleteRechargeInfo() {
+        rechargeDao.deleteRechargeInfo();
+    }
+
+    @Override
+    public void updateRechargeInfo() {
+        ArrayList<RechargeInfo> allFilesRechargeInfoList = FileManager.getInstance().getAllFilesRechargeInfo();
+        for (RechargeInfo rechargeInfo : allFilesRechargeInfoList) {
+            rechargeDao.insertRechargeInfo(rechargeInfo);
+        }
     }
 
 }

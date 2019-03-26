@@ -2,7 +2,7 @@ package com.ledo.handlers;
 
 import com.ledo.beans.User;
 import com.ledo.manager.UserManager;
-import com.ledo.service.IOnlineNumberService;
+import com.ledo.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -18,8 +18,8 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class LoginController {
     @Autowired
-    @Qualifier("onlineNumberService")
-    IOnlineNumberService onlineNumberService;
+    @Qualifier("userService")
+    IUserService userService;
 
     @RequestMapping("/login.do")
     public ModelAndView login() {
@@ -33,8 +33,8 @@ public class LoginController {
         String name = null;
         String pwd = null;
         User user = new User(userName, passWord);
-        int nameCount = onlineNumberService.referUserNameCount(user);
-        int userCount = onlineNumberService.verifyUserInfo(user);
+        int nameCount = userService.referUserNameCount(user);
+        int userCount = userService.verifyUserInfo(user);
         if (nameCount > 0) {
             name = userName;
             if (userCount > 0) {
@@ -49,8 +49,8 @@ public class LoginController {
         String name = null;
         String pwd = null;
         User user = new User(userName, passWord);
-        int nameCount = onlineNumberService.referUserNameCount(user);
-        int userCount = onlineNumberService.verifyUserInfo(user);
+        int nameCount = userService.referUserNameCount(user);
+        int userCount = userService.verifyUserInfo(user);
         if (nameCount > 0 && UserManager.isAdmin(userName)) {
             name = userName;
             if (userCount > 0) {

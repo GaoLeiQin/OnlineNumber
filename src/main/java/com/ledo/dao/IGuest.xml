@@ -4,16 +4,16 @@
 <mapper namespace="com.ledo.dao.IGuest">
 
     <insert id="insertGuestInfo" parameterType="GuestInfo">
-		insert into guest_info4(date,userName,type,ip,userAgent)
+		insert into guest_info(date,userName,type,ip,userAgent)
 		values(#{date},#{userName},#{type},#{ip},#{userAgent})
 	</insert>
 
     <select id="queryGuestInfo" resultType="GuestInfo">
-		select date,userName,type,ip,userAgent from guest_info4 order by id desc
+		select date,userName,type,ip,userAgent from guest_info order by id desc
 	</select>
 
     <select id="queryGuestInfoByCondition" parameterType="GuestInfo" resultType="GuestInfo">
-        select date,userName,type,ip,userAgent from guest_info4
+        select date,userName,type,ip,userAgent from guest_info
         <where>
             <if test="date != null and date != ''">
                 date like CONCAT('%',#{date},'%')
@@ -40,7 +40,7 @@
     </select>
 
     <select id="queryGuestInfoCountByCondition" parameterType="GuestInfo" resultType="Integer">
-        select count(*) from guest_info4
+        select count(*) from guest_info
         <where>
             <if test="date != null and date != ''">
                 date like CONCAT('%',#{date},'%')

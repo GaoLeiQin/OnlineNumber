@@ -1,6 +1,6 @@
 package com.ledo.task;
 
-import com.ledo.dao.IAdministrator;
+import com.ledo.dao.IOnlineNumber;
 import com.ledo.dao.IUrlContent;
 import org.apache.log4j.Logger;
 
@@ -25,14 +25,14 @@ public class AllTask {
 
     /**
      * 开启自动更新任务（包括网页内容和添加服务器信息）
-     * @param administratorDao
+     * @param onlineNumberDao
      * @param urlContentDao
      */
-    public void startAutoUpdateTask(IAdministrator administratorDao, IUrlContent urlContentDao) {
+    public void startAutoUpdateTask(IOnlineNumber onlineNumberDao, IUrlContent urlContentDao) {
         scheduledExecutor = new ScheduledThreadPoolExecutor(CORE_POOL_SIZE, new MyThreadFactory(NAME_PREVIOUS_UPDATE_DATA_POOL));
         SaveUrlContentTask urlContentTask = new SaveUrlContentTask(urlContentDao);
         urlContentTask.setThreadName(URLCONTENT_THREAD_NAME);
-        SaveServerInfoTask serverInfoTask = new SaveServerInfoTask(administratorDao, urlContentDao);
+        SaveServerInfoTask serverInfoTask = new SaveServerInfoTask(onlineNumberDao, urlContentDao);
         serverInfoTask.setThreadName(SERVERINFO_THREAD_NAME);
 
         long beforeTime = System.currentTimeMillis();
@@ -55,14 +55,14 @@ public class AllTask {
 
     /**
      * 监视线程任务
-     * @param administratorDao
+     * @param onlineNumberDao
      * @param urlContentDao
      */
-    public void executeMonitorThreadTask(IAdministrator administratorDao, IUrlContent urlContentDao) {
+    public void executeMonitorThreadTask(IOnlineNumber onlineNumberDao, IUrlContent urlContentDao) {
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor(new MyThreadFactory(NAME_PREVIOUS_MONITOR_POOL));
-        MonitorThreadPoolTask monitorThreadPoolTask = new MonitorThreadPoolTask(this.scheduledExecutor, administratorDao, urlContentDao);
+        MonitorThreadPoolTask monitorThreadPoolTask = new MonitorThreadPoolTask(this.scheduledExecutor, onlineNumberDao, urlContentDao);
         monitorThreadPoolTask.setThreadName(MONITOR_THREAD_NAME);
-        executorService.scheduleAtFixedRate(monitorThreadPoolTask, HOUR, HOUR, TimeUnit.MILLISECONDS);
+        executorService.scheduleAtFixedRate(monitorThreadPoolTask, MONITOR_THREAD_POOL_PERIOD, MONITOR_THREAD_POOL_PERIOD, TimeUnit.MILLISECONDS);
         logger.info("监视线程已启动！");
     }
 
@@ -91,13 +91,5 @@ public class AllTask {
             t.setPriority(Thread.NORM_PRIORITY);
             return t;
         }
-    }
-
-    /**
-     * 获取线程池对象
-     * @return
-     */
-    public ScheduledThreadPoolExecutor getScheduledExecutor() {
-        return scheduledExecutor;
     }
 }

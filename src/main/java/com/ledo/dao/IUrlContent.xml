@@ -2,36 +2,34 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ledo.dao.IUrlContent">
+
 	<insert id="insertUrlContent">
-		insert into urlcontent_test(channel,zoneId,serverName,onlineNum,maxOnlineNum)
+		insert into urlcontent_info(channel,zoneId,serverName,onlineNum,maxOnlineNum)
 		values(#{channel},#{zoneId},#{serverName},#{onlineNum},#{maxOnlineNum})
 	</insert>
 
 	<delete id="deleteUrlContent">
-		delete from urlcontent_test
+		delete from urlcontent_info
 	</delete>
 
 	<select id="queryUrlContents" resultType="UrlContent">
-		select channel,zoneId,serverName,onlineNum,maxOnlineNum from urlcontent_test
+		select channel,zoneId,serverName,onlineNum,maxOnlineNum from urlcontent_info
 	</select>
 
 	<select id="queryOfficialSum" resultType="Integer">
-		select sum(onlineNum) from urlcontent_test where channel like "ledo%"
+		select sum(onlineNum) from urlcontent_info where channel like "ledo%"
 	</select>
 
 	<select id="queryMixSum" resultType="Integer">
-		select sum(onlineNum) from urlcontent_test where channel like "硬核%" or channel like "混服%"
+		select sum(onlineNum) from urlcontent_info where channel like "硬核%" or channel like "混服%"
 	</select>
 
 	<select id="queryGatSum" resultType="Integer">
-		select sum(onlineNum) from urlcontent_test where channel like "GAT%"
+		select sum(onlineNum) from urlcontent_info where channel like "GAT%"
 	</select>
 
 	<select id="queryAllSum" resultType="Integer">
-		select sum(onlineNum) from urlcontent_test
+		select sum(onlineNum) from urlcontent_info
 	</select>
 
-<!--	<select id="queryMixMinInfo" resultType="UrlContent">
-		select channel,zoneId,serverName,onlineNum,maxOnlineNum from urlcontent_test where channel like "硬核%" or channel like "混服%" order by onlineNum limit 1
-	</select>-->
 </mapper>

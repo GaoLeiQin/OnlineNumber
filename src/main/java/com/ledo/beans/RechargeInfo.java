@@ -6,19 +6,20 @@ package com.ledo.beans;
  * @date 2018/10/9
  */
 public class RechargeInfo {
-    private int zoneId;
+    private Integer zoneId;
     private String date;
-    private int userId;
-    private int roleId;
-    private int rmbNum;
+    private Integer userId;
+    private Integer roleId;
+    private Integer rmbNum;
     private String platId;
     private String platName;
     private String chargePlatSn;
-    private int chargeGameSn;
+    private Integer chargeGameSn;
+    private Page page;
 
     public RechargeInfo(){}
 
-    public RechargeInfo(int zoneId, String date, int userId, int roleId, int rmbNum, String platId, String platName, String chargePlatSn, int chargeGameSn) {
+    public RechargeInfo(Integer zoneId, String date, Integer userId, Integer roleId, Integer rmbNum, String platId, String platName, String chargePlatSn, Integer chargeGameSn) {
         this.zoneId = zoneId;
         this.date = date;
         this.userId = userId;
@@ -30,11 +31,11 @@ public class RechargeInfo {
         this.chargeGameSn = chargeGameSn;
     }
 
-    public int getZoneId() {
+    public Integer getZoneId() {
         return zoneId;
     }
 
-    public void setZoneId(int zoneId) {
+    public void setZoneId(Integer zoneId) {
         this.zoneId = zoneId;
     }
 
@@ -46,27 +47,27 @@ public class RechargeInfo {
         this.date = date;
     }
 
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
-    public int getRoleId() {
+    public Integer getRoleId() {
         return roleId;
     }
 
-    public void setRoleId(int roleId) {
+    public void setRoleId(Integer roleId) {
         this.roleId = roleId;
     }
 
-    public int getRmbNum() {
+    public Integer getRmbNum() {
         return rmbNum;
     }
 
-    public void setRmbNum(int rmbNum) {
+    public void setRmbNum(Integer rmbNum) {
         this.rmbNum = rmbNum;
     }
 
@@ -94,12 +95,20 @@ public class RechargeInfo {
         this.chargePlatSn = chargePlatSn;
     }
 
-    public int getChargeGameSn() {
+    public Integer getChargeGameSn() {
         return chargeGameSn;
     }
 
-    public void setChargeGameSn(int chargeGameSn) {
+    public void setChargeGameSn(Integer chargeGameSn) {
         this.chargeGameSn = chargeGameSn;
+    }
+
+    public Page getPage() {
+        return page;
+    }
+
+    public void setPage(Page page) {
+        this.page = page;
     }
 
     @Override
@@ -114,6 +123,7 @@ public class RechargeInfo {
                 ", platName='" + platName + '\'' +
                 ", chargePlatSn='" + chargePlatSn + '\'' +
                 ", chargeGameSn=" + chargeGameSn +
+                ", page=" + page +
                 '}';
     }
 }

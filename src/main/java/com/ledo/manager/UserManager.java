@@ -8,8 +8,14 @@ import java.util.ArrayList;
  * @date 2018/11/11
  */
 public class UserManager {
+    /** 管理员列表 */
     private static final String ADMIN_USER_1 = "qingaolei";
     private static final String ADMIN_USER_2 = "liuxudong";
+    public static UserManager instance = new UserManager();
+
+    public static UserManager getInstance() {
+        return instance;
+    }
 
     /**
      * 判断该用户是否是管理员

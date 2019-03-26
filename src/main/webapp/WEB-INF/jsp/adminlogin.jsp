@@ -122,7 +122,7 @@
     function verify(){
         var userName = document.getElementById("userName").value;
         var passWord = document.getElementById("passWord").value;
-
+        passWord = $.md5(passWord);
         if(userName === ""){
             alert("用户名不能为空！");
             return false;

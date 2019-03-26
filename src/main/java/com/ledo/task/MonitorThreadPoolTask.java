@@ -1,6 +1,6 @@
 package com.ledo.task;
 
-import com.ledo.dao.IAdministrator;
+import com.ledo.dao.IOnlineNumber;
 import com.ledo.dao.IUrlContent;
 
 import java.util.List;
@@ -16,9 +16,9 @@ import static com.ledo.common.ThreadContant.CORE_POOL_SIZE;
 public class MonitorThreadPoolTask extends Task {
     private ScheduledThreadPoolExecutor scheduledExecutor = null;
 
-    public MonitorThreadPoolTask(ScheduledThreadPoolExecutor scheduledExecutor, IAdministrator administratorDao, IUrlContent urlContentDao) {
+    public MonitorThreadPoolTask(ScheduledThreadPoolExecutor scheduledExecutor, IOnlineNumber onlineNumberDao, IUrlContent urlContentDao) {
         this.scheduledExecutor = scheduledExecutor;
-        this.administratorDao = administratorDao;
+        this.onlineNumberDao = onlineNumberDao;
         this.urlContentDao = urlContentDao;
     }
 
@@ -36,7 +36,7 @@ public class MonitorThreadPoolTask extends Task {
         long waittingTaskCount = alltTaskCount - completeCount;
         int needRunningTaskCount = CORE_POOL_SIZE - 1;
         if (waittingTaskCount < needRunningTaskCount) {
-            int stopTaskCount = this.restart(administratorDao, urlContentDao);
+            int stopTaskCount = this.restart(onlineNumberDao, urlContentDao);
             logger.error("当前等待运行的任务 " + waittingTaskCount + " 个，需要一直运行的任务 " +
                     needRunningTaskCount + " 个，所以必须重启自动更新线程！！！已暂停等待执行任务 " + stopTaskCount + " 个");
         }else {
@@ -48,7 +48,7 @@ public class MonitorThreadPoolTask extends Task {
      * 重启自动更新线程
      * @return 已暂停等待执行任务数量
      */
-    public int restart(IAdministrator administratorDao, IUrlContent urlContentDao) {
+    public int restart(IOnlineNumber onlineNumberDao, IUrlContent urlContentDao) {
         int stopTaskCount = -1;
         if (this.scheduledExecutor.getTaskCount() > 0) {
             List<Runnable> runnableList = this.scheduledExecutor.shutdownNow();
@@ -56,7 +56,7 @@ public class MonitorThreadPoolTask extends Task {
         }else {
             this.scheduledExecutor = null;
         }
-        AllTask.getInstance().startAutoUpdateTask(administratorDao, urlContentDao);
+        AllTask.getInstance().startAutoUpdateTask(onlineNumberDao, urlContentDao);
         return stopTaskCount;
     }
 }

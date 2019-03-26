@@ -1,9 +1,11 @@
 package com.ledo.common;
 
+import static javax.management.timer.Timer.*;
+
 /**
  * 线程相关常量
  * @author qgl
- * @date 2018/9/24
+ * @date 2018/11/14
  */
 public class ThreadContant {
     // 线程池参数
@@ -23,21 +25,18 @@ public class ThreadContant {
     public static final String MONITOR_THREAD_NAME = "MonitorTask";
 
     // 开启线程检测的时间配置
-    /** 时间常量，单位:ms */
-    public static final int SECOND = 1000;
-    public static final int MINUTE = 60 * SECOND;
-    /** 检测线程池运行状态任务的周期：1 小时 */
-    public static final int HOUR = 60 * MINUTE;
     /** 检测合适的时间，最多检测 20 分钟，否则超时立即执行线程，防止出现死循环 */
-    public static final int MONITOR_TIME_OUT = 20 * MINUTE;
+    public static final long MONITOR_TIME_OUT = 20 * ONE_MINUTE;
     /** 检测到合适的时间，该时间的最大误差: 0.5 秒 */
-    public static final int MAX_ERROR_RANGE = 500;
+    public static final long MAX_ERROR_RANGE = 500;
     /** 保存服务器信息的周期：10 分钟 */
-    public static final int SAVE_SERVER_INFO_PERIOD = 10 * MINUTE;
+    public static final long SAVE_SERVER_INFO_PERIOD = 10 * ONE_MINUTE;
     /** 保存网页内容的周期：1 分钟 */
-    public static final int SAVE_URLCONTENT_PERIOD = MINUTE;
+    public static final long SAVE_URLCONTENT_PERIOD = ONE_MINUTE;
     /** 保存网页内容任务的延迟时间：27 秒，因为保存网页内容到数据库的SQL语句需要2.7秒左右
      这两个时间加起来一共延迟30秒左右，就可以达到更新时间是 xx:xx:30 的期望时间 */
-    public static final int URLCONTENT_TASK_INITIALDELAY = 27 * SECOND;
+    public static final long URLCONTENT_TASK_INITIALDELAY = 27 * ONE_SECOND;
+    /** 检测线程池运行状态任务的周期：1 小时 */
+    public static final long MONITOR_THREAD_POOL_PERIOD = ONE_HOUR;
 
 }

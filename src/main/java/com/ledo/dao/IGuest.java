@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public interface IGuest {
     /** 插入访客信息 */
-    void insertGuestInfo(GuestInfo guestInfo);
+    void insertGuestInfo(GuestInfo urlcontent_info);
     /** 查询所有访客信息 */
     ArrayList<GuestInfo> queryGuestInfo();
     /** 根据条件查询访客信息 */

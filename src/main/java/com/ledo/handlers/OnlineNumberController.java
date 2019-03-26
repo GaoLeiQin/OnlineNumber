@@ -3,10 +3,11 @@ package com.ledo.handlers;
 import com.ledo.beans.Page;
 import com.ledo.beans.ServerHistoryInfo;
 import com.ledo.beans.UrlContent;
-import com.ledo.manager.FileManager;
+import com.ledo.manager.PageManager;
 import com.ledo.manager.URLManager;
+import com.ledo.service.IGuestService;
 import com.ledo.service.IOnlineNumberService;
-import org.apache.log4j.Logger;
+import com.ledo.service.IUrlContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -23,27 +24,34 @@ import java.util.HashMap;
  * @date 2018/10/11
  */
 @Controller
-public class GuestController {
+public class OnlineNumberController {
     @Autowired
     @Qualifier("onlineNumberService")
     IOnlineNumberService onlineNumberService;
 
+    @Autowired
+    @Qualifier("guestService")
+    IGuestService guestService;
+
+    @Autowired
+    @Qualifier("urlContentService")
+    IUrlContentService urlContentService;
+
     @RequestMapping("/guest/guestShow.do")
     public ModelAndView show(HttpServletRequest request, String userName){
-        // 若没有经过登录界面，则返回登录界面
-        if (request.getHeader(URLManager.HEADER_PARAM_REFERER) == null) {
+        if (!URLManager.getInstance().canVisit(request)) {
             return new ModelAndView("login");
         }
-        onlineNumberService.addGuestInfo(request, userName);
+        guestService.addGuestInfo(request, userName);
         ModelAndView mv = new ModelAndView();
-        ArrayList<UrlContent> allUrlContents = onlineNumberService.queryUrlContents();
-        HashMap<String, ArrayList<UrlContent>> urlContentsMapByCondition = onlineNumberService.getURLContentsMapByCondition(allUrlContents);
+        ArrayList<UrlContent> allUrlContents = urlContentService.queryUrlContents();
+        HashMap<String, ArrayList<UrlContent>> urlContentsMapByCondition = urlContentService.getURLContentsMapByCondition(allUrlContents);
         ArrayList<UrlContent> officialContents = new ArrayList<>();
         ArrayList<UrlContent> androidContents = new ArrayList<>();
         ArrayList<UrlContent> hardAllianceContents = new ArrayList<>();
         ArrayList<UrlContent> gatContents = new ArrayList<>();
-        URLManager.setContentsByCondition(urlContentsMapByCondition, officialContents, androidContents, hardAllianceContents, gatContents);
-        URLManager.sortAllUrlContensByOnlineNum(allUrlContents);
+        URLManager.getInstance().setContentsByCondition(urlContentsMapByCondition, officialContents, androidContents, hardAllianceContents, gatContents);
+        URLManager.getInstance().sortAllUrlContensByOnlineNum(allUrlContents);
         mv.addObject("officialContents", officialContents);
         mv.addObject("androidContents", androidContents);
         mv.addObject("hardAllianceContents", hardAllianceContents);
@@ -58,7 +66,7 @@ public class GuestController {
     public ModelAndView historyData(Page page, ServerHistoryInfo history) {
         ModelAndView mv = new ModelAndView();
         Page pageInfo = null;
-        pageInfo = URLManager.setPageInfo(page, onlineNumberService.referHistoryInfoCountByCondition(history));
+        pageInfo = PageManager.getInstance().setPageInfo(page, onlineNumberService.referHistoryInfoCountByCondition(history));
         history.setPage(pageInfo);
         ArrayList<ServerHistoryInfo> historyInfos = onlineNumberService.referHistoryInfoByCondition(history);
 

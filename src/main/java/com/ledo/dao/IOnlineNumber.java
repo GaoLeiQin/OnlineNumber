@@ -7,6 +7,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public interface IOnlineNumber {
+    /** 插入服务器在线信息 */
+    void insertServerInfo(ServerHistoryInfo serverInfo);
+    /** 查询服务器最近25条历史在线信息 */
+    ArrayList<ServerHistoryInfo> queryServerHistoryInfoByLimit25();
     /** 查询服务器的历史信息 */
     ArrayList<ServerHistoryInfo> queryServerHistoryInfo();
     /** 分页查询服务器的历史信息 */

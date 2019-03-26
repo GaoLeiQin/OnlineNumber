@@ -2,14 +2,97 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ledo.dao.IRecharge">
+
+	<!--删除充值数据-->
+	<delete id="deleteRechargeInfo">
+		delete from recharge_info
+	</delete>
+
+	<!--插入充值数据-->
+	<insert id="insertRechargeInfo" parameterType="RechargeInfo">
+		insert into recharge_info(zoneId,date,userId,roleId,rmbNum,platId,platName,chargePlatSn,chargeGameSn)
+		values(#{zoneId},#{date},#{userId},#{roleId},#{rmbNum},#{platId},#{platName},#{chargePlatSn},#{chargeGameSn});
+	</insert>
+
 	<select id="queryRechargeInfo" resultType="RechargeInfo">
-		select zoneId,date,userId,roleId,rmbNum,platId,platName,chargePlatSn,chargeGameSn from rechargeinfo_test3
+		select zoneId,date,userId,roleId,rmbNum,platId,platName,chargePlatSn,chargeGameSn from recharge_info
 	</select>
 
-	<select id="queryRechargeInfoByPage" parameterType="Page" resultType="RechargeInfo">
-		select zoneId,date,userId,roleId,rmbNum,platId,platName,chargePlatSn,chargeGameSn from rechargeinfo_test3
-		<if test="startRow != null and pageSize">
-			limit #{startRow},#{pageSize}
+	<select id="queryRechargeInfoCountByCondition" parameterType="RechargeInfo" resultType="Integer">
+		select count(*) from recharge_info
+		<where>
+			<if test = "zoneId != null">
+				zoneId = #{zoneId}
+			</if>
+			<if test="date != null and date != ''">
+				and date like CONCAT('%',#{date},'%')
+			</if>
+			<if test = "userId != null">
+				userId = #{userId}
+			</if>
+			<if test = "roleId != null">
+				roleId = #{roleId}
+			</if>
+			<if test="rmbNum != null and rmbNum >= 0">
+				and <![CDATA[ rmbNum > #{rmbNum}  ]]>
+			</if>
+			<if test="rmbNum != null and rmbNum &lt;  0">
+				and <![CDATA[ rmbNum < -#{rmbNum}  ]]>
+			</if>
+			<if test="platId != null and platId != ''">
+				and platId like CONCAT('%',#{platId},'%')
+			</if>
+			<if test="platName != null and platName != ''">
+				and platName like CONCAT('%',#{platName},'%')
+			</if>
+			<if test="chargePlatSn != null and chargePlatSn != ''">
+				and chargePlatSn like CONCAT('%',#{chargePlatSn},'%')
+			</if>
+			<if test = "chargeGameSn != null">
+				chargeGameSn = #{chargeGameSn}
+			</if>
+		</where>
+	</select>
+
+	<select id="queryRechargeInfoByPage" parameterType="RechargeInfo" resultType="RechargeInfo">
+		select zoneId,date,userId,roleId,rmbNum,platId,platName,chargePlatSn,chargeGameSn from recharge_info
+		<where>
+			<if test = "zoneId != null">
+				zoneId = #{zoneId}
+			</if>
+			<if test="date != null and date != ''">
+				and date like CONCAT('%',#{date},'%')
+			</if>
+			<if test = "userId != null">
+				userId = #{userId}
+			</if>
+			<if test = "roleId != null">
+				roleId = #{roleId}
+			</if>
+			<if test="rmbNum != null and rmbNum >= 0">
+				and <![CDATA[ rmbNum > #{rmbNum}  ]]>
+			</if>
+			<if test="rmbNum != null and rmbNum &lt;  0">
+				and <![CDATA[ rmbNum < -#{rmbNum}  ]]>
+			</if>
+			<if test="platId != null and platId != ''">
+				and platId like CONCAT('%',#{platId},'%')
+			</if>
+			<if test="platName != null and platName != ''">
+				and platName like CONCAT('%',#{platName},'%')
+			</if>
+			<if test="chargePlatSn != null and chargePlatSn != ''">
+				and chargePlatSn like CONCAT('%',#{chargePlatSn},'%')
+			</if>
+			<if test = "chargeGameSn != null">
+				chargeGameSn = #{chargeGameSn}
+			</if>
+		</where>
+
+		order by id desc
+
+		<if test="page != null">
+			limit #{page.startRow},#{page.pageSize}
 		</if>
 	</select>
 

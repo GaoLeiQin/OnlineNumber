@@ -4,9 +4,10 @@ import com.ledo.beans.GuestInfo;
 import com.ledo.beans.Page;
 import com.ledo.beans.ServerHistoryInfo;
 import com.ledo.beans.UrlContent;
-import com.ledo.manager.FileManager;
+import com.ledo.manager.PageManager;
 import com.ledo.manager.URLManager;
-import com.ledo.service.IAdministratorService;
+import com.ledo.service.*;
+import com.ledo.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+
+import static com.ledo.common.ServerConstant.*;
 
 /**
  * 管理员页面 控制器
@@ -28,46 +31,65 @@ public class AdministratorController {
     private String updateRechargeInfoDate;
     private boolean isOpenedTask;
     @Autowired
-    @Qualifier("IAdministratorService")
+    @Qualifier("urlContentService")
+    IUrlContentService urlContentService;
+
+    @Autowired
+    @Qualifier("guestService")
+    IGuestService guestService;
+
+    @Autowired
+    @Qualifier("allServerInfoService")
+    IAllServerInfoService allServerInfoService;
+
+    @Autowired
+    @Qualifier("onlineNumberService")
+    IOnlineNumberService onlineNumberService;
+
+    @Autowired
+    @Qualifier("rechargeInfoService")
+    IRechargeInfoService rechargeInfoService;
+
+    @Autowired
+    @Qualifier("administratorService")
     IAdministratorService administratorService;
 
     @RequestMapping("/adminShow.do")
     public ModelAndView adminShow(boolean isUpdateLinuxServerInfo, String userName,
                                   boolean isUpdateRechargeInfo, HttpServletRequest request, boolean isNowStartTask){
-        // 若没有经过登录界面，则返回管理员登录界面
-        if (request.getHeader(URLManager.HEADER_PARAM_REFERER) == null) {
+        if (!URLManager.getInstance().canVisit(request)) {
             return new ModelAndView("adminlogin");
         }
 
-        userName = userName == null ? "Other" : userName;
+        userName = userName == null ? OTHER_USER : userName;
         ModelAndView mv = new ModelAndView();
-        int linuxServerSum = administratorService.referLinuxServerInfo().size();
+        int linuxServerSum = allServerInfoService.referLinuxServerInfo().size();
         if (isUpdateLinuxServerInfo) {
-            userName = "UpdateLinux";
-            administratorService.deleteLinuxServerInfo();
-            administratorService.updateLinuxServerInfo();
-            updateLinuxServerInfoDate = FileManager.getNowFormatDate();
-            mv.addObject("conflictSum", administratorService.queryUrlContents().size() - linuxServerSum);
+            userName = UPDATE_LINUX_OPERATION;
+            allServerInfoService.deleteLinuxServerInfo();
+            allServerInfoService.updateLinuxServerInfo();
+            updateLinuxServerInfoDate = DateUtil.getNowFormatDate();
+            mv.addObject("conflictSum", urlContentService.queryUrlContents().size() - linuxServerSum);
         }
 
         if (isUpdateRechargeInfo) {
-            userName = "UpdateRecharge";
-            administratorService.deleteRechargeInfo();
-            administratorService.updateRechargeInfo();
-            updateRechargeInfoDate = FileManager.getNowFormatDate();
+            userName = UPDATE_RECHARGE_OPERATION;
+            rechargeInfoService.deleteRechargeInfo();
+            rechargeInfoService.updateRechargeInfo();
+            updateRechargeInfoDate = DateUtil.getNowFormatDate();
 
         }
 
         if (isNowStartTask && !isOpenedTask) {
             isOpenedTask = true;
-            userName = "StartTask";
+            userName = START_TASK_OPERATION;
             administratorService.openAutoUpdateTask();
         }
 
-        administratorService.addGuestInfo(request, userName);
+        guestService.addGuestInfo(request, userName);
         mv.addObject("updateLinuxServerInfoDate", updateLinuxServerInfoDate);
         mv.addObject("updateRechargeInfoDate", updateRechargeInfoDate);
-        mv.addObject("rechargeSum", administratorService.referRechargeInfo().size());
+        mv.addObject("rechargeSum", rechargeInfoService.referRechargeInfo().size());
         mv.addObject("linuxServerSum", linuxServerSum);
         mv.addObject("isOpenedTask", isOpenedTask);
         mv.setViewName("adminShow");
@@ -77,9 +99,9 @@ public class AdministratorController {
     @RequestMapping("/guestInfo.do")
     public ModelAndView guestInfo(Page page, GuestInfo guest) {
         ModelAndView mv = new ModelAndView();
-        Page pageInfo = URLManager.setPageInfo(page, administratorService.queryGuestInfoCountByCondition(guest));
+        Page pageInfo = PageManager.getInstance().setPageInfo(page, guestService.queryGuestInfoCountByCondition(guest));
         guest.setPage(pageInfo);
-        ArrayList<GuestInfo> guestInfos = administratorService.queryGuestInfoByCondition(guest);
+        ArrayList<GuestInfo> guestInfos = guestService.queryGuestInfoByCondition(guest);
 
         mv.addObject("guest", guest);
         mv.addObject("page", pageInfo);
@@ -91,8 +113,8 @@ public class AdministratorController {
     @RequestMapping("/autoUpdateUrlContent.do")
     public ModelAndView AutoUpdateUrlContent(){
         ModelAndView mv = new ModelAndView();
-        administratorService.updateUrlContent();
-        ArrayList<UrlContent> serverInfos = administratorService.queryUrlContents();
+        urlContentService.updateUrlContent();
+        ArrayList<UrlContent> serverInfos = urlContentService.queryUrlContents();
         mv.addObject("serverInfos", serverInfos);
         mv.setViewName("autoUpdateUrlContent");
         return mv;
@@ -102,9 +124,10 @@ public class AdministratorController {
     public ModelAndView AutoInsertOnlineServerInfo(){
         ModelAndView mv = new ModelAndView();
         administratorService.addServerInfo();
-        ArrayList<ServerHistoryInfo> serverHistoryInfoByLimit = administratorService.referServerHistoryInfoByLimit25();
+        ArrayList<ServerHistoryInfo> serverHistoryInfoByLimit = onlineNumberService.referServerHistoryInfoByLimit25();
         mv.addObject("serverHistoryInfoByLimit", serverHistoryInfoByLimit);
         mv.setViewName("autoInsertOnlineServerInfo");
         return mv;
     }
+
 }

@@ -1,6 +1,5 @@
-import com.ledo.manager.FileManager;
 import com.ledo.task.MonitorThreadPoolTask;
-import com.ledo.task.SaveUrlContentTask;
+import com.ledo.util.DateUtil;
 import org.junit.Test;
 
 import java.util.List;
@@ -61,10 +60,10 @@ public class TaskTest extends BaseTest {
                 System.out.println(i - now);
             }
         }
-        logger.info(FileManager.getMilliSecondByFormatDate("2018-11-14 13:39:00"));
-        logger.info(FileManager.getMilliSecondByFormatDate("2018-11-14 13:40:00"));
-        logger.info(FileManager.getMilliSecondByFormatDate("2018-11-14 13:49:00"));
-        logger.info(FileManager.getMilliSecondByFormatDate("2018-11-14 13:49:00") - FileManager.getMilliSecondByFormatDate("2018-11-14 13:39:00"));
+        logger.info(DateUtil.getMilliSecondByFormatDate("2018-11-14 13:39:00"));
+        logger.info(DateUtil.getMilliSecondByFormatDate("2018-11-14 13:40:00"));
+        logger.info(DateUtil.getMilliSecondByFormatDate("2018-11-14 13:49:00"));
+        logger.info(DateUtil.getMilliSecondByFormatDate("2018-11-14 13:49:00") - DateUtil.getMilliSecondByFormatDate("2018-11-14 13:39:00"));
     }
 
     public class SaveServerInfoTask implements Runnable {

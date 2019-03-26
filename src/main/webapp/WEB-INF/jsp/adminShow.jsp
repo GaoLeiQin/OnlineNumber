@@ -1,5 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8" %>
-<%@ page import="com.ledo.manager.FileManager" %>
+<%@ page import="com.ledo.util.DateUtil" %>
+<%@ page import="static com.ledo.common.ThreadContant.SAVE_SERVER_INFO_PERIOD" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
@@ -137,7 +138,7 @@
 <script type="text/javascript">
     function openAutoUpdateTask() {
         var isOpen = false;
-        <% String waitingTime = FileManager.getWaitingTime(); %>
+        <% String waitingTime = DateUtil.getWaitingTime(SAVE_SERVER_INFO_PERIOD); %>
         if (confirm("还需：<%=waitingTime%> 后才能开启线程，请耐心等待......")) {
             isOpen = true;
         }

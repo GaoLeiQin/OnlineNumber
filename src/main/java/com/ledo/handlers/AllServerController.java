@@ -1,8 +1,8 @@
 package com.ledo.handlers;
 
 import com.ledo.beans.AllServerInfo;
-import com.ledo.manager.FileManager;
 import com.ledo.service.IAllServerInfoService;
+import com.ledo.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -11,6 +11,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
 
+/** Linux服务器控制器
+ * @author qgl
+ * @date 2018/10/9
+ */
 @Controller
 @RequestMapping("/allServer")
 public class AllServerController {
@@ -25,7 +29,7 @@ public class AllServerController {
 
         if (isUpdate) {
             allServerInfoService.onlyUpdateOnlineNumbersInfo();
-            updateTime = FileManager.getNowFormatDate();
+            updateTime = DateUtil.getNowFormatDate();
         }
 
         ArrayList<AllServerInfo> serverInfosByCondition  = allServerInfoService.referServerInfoByCondition(serverInfo);
@@ -33,13 +37,6 @@ public class AllServerController {
         mv.addObject("serverInfo", serverInfo);
         mv.addObject("updateTime", updateTime);
         mv.setViewName("allServerInfo");
-        return mv;
-    }
-
-    @RequestMapping("/test.do")
-    public ModelAndView test() {
-        ModelAndView mv = new ModelAndView();
-        mv.setViewName("chart");
         return mv;
     }
 

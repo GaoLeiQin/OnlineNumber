@@ -3,6 +3,16 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ledo.dao.IOnlineNumber">
 
+    <!--插入服务器在线数据-->
+    <insert id="insertServerInfo" parameterType="ServerHistoryInfo">
+		insert into online_number_2018_10(date,officialNum,mixNum,gatNum,totalNum)
+		values(#{date},#{officialNum},#{mixNum},#{gatNum},#{totalNum})
+	</insert>
+
+    <select id="queryServerHistoryInfoByLimit25" resultType="ServerHistoryInfo">
+		select date,officialNum,mixNum,gatNum,totalNum from online_number_2018_10 order by id desc limit 0,25
+	</select>
+
     <select id="queryServerHistoryInfo" resultType="ServerHistoryInfo">
 		select date,officialNum,mixNum,gatNum,totalNum from online_number_2018_10 order by id desc
 	</select>

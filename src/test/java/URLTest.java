@@ -1,5 +1,4 @@
 import com.ledo.beans.UrlContent;
-import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -7,39 +6,26 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class URLTest {
-    Logger logger = Logger.getLogger(URLTest.class);
+import static com.ledo.common.URLConstant.OFFICIAL_IP;
 
-    /**
-     一、 mvn 测试命令
-     1. mvn test  编译项目代码，并运行test/java文件夹下所有测试类
-     2. mvn test -Dtest=URLTest 只运行URLTest测试类
-     3. mvn test -Dtest=URLTest#firstTest 只运行URLTest类的firstTest测试方法
-     4. mvn test -Dtest=RandomTest,Random2Test 指定运行多个类
-     5. mvn test -Dtest=Random*Test 指定运行能匹配的多个类
-
-     二、Maven 默认会执行以下类名的类
-     1. Test*.java ：以Test开头的Java类；
-     2. *Test.java ：以Test结尾的Java类;
-     3. *TestCase.java：以TestCase结尾的Java类；
-
-     三、跳过测试用例
-     1. 打包时跳过
-     （1）只跳过执行：mvn package -DskipTests
-     （2）执行编译都跳过：mvn package -Dmaven.test.skip=true
-
-    */
+public class URLTest extends BaseTest{
     @Test
     public void firstTest() {
         System.out.println(" URL 测试！");
     }
 
     @Test
-    public void hashMapTest() {
-        System.out.println(" 测试 hashMap！");
+    public void timeOut() throws IOException {
+        URL url = new URL(OFFICIAL_IP);
+        URLConnection urlConnection = url.openConnection();
+        urlConnection.setConnectTimeout(55);
+        System.out.println(urlConnection.getConnectTimeout());
+        InputStreamReader isr = new InputStreamReader(urlConnection.getInputStream(), "utf-8");
+        logger.info("网页内容：" + new BufferedReader(isr).readLine());
     }
 
     public void printInfo() {
