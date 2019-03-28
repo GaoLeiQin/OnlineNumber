@@ -56,7 +56,6 @@
 	<!--处理静态资源-->
 	<mvc:default-servlet-handler/>
 	<mvc:resources location="/images/" mapping="/images/**"/>
-	<mvc:resources location="/js/" mapping="/js/**"/>
 	<mvc:resources location="/chartJS/" mapping="/chartJS/**" />
 	<mvc:resources mapping="/favicon.ico" location="/favicon.ico" />
 </web-app>
