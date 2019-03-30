@@ -1,7 +1,10 @@
 package com.ledo.task;
 
-import com.ledo.dao.IOnlineNumber;
-import com.ledo.dao.IUrlContent;
+import com.ledo.manager.DateManager;
+import com.ledo.service.IAllServerInfoService;
+import com.ledo.service.IOnlineNumberService;
+import com.ledo.service.IUrlContentService;
+import com.ledo.util.DateUtil;
 import org.apache.log4j.Logger;
 
 import java.util.concurrent.*;
@@ -25,15 +28,16 @@ public class AllTask {
 
     /**
      * 开启自动更新任务（包括网页内容和添加服务器信息）
-     * @param onlineNumberDao
-     * @param urlContentDao
+     * @param onlineNumberService
      */
-    public void startAutoUpdateTask(IOnlineNumber onlineNumberDao, IUrlContent urlContentDao) {
+    public void startAutoUpdateTask(IUrlContentService urlContentService, IOnlineNumberService onlineNumberService, IAllServerInfoService allServerInfoService) {
         scheduledExecutor = new ScheduledThreadPoolExecutor(CORE_POOL_SIZE, new MyThreadFactory(NAME_PREVIOUS_UPDATE_DATA_POOL));
-        SaveUrlContentTask urlContentTask = new SaveUrlContentTask(urlContentDao);
+        SaveUrlContentTask urlContentTask = new SaveUrlContentTask(urlContentService);
         urlContentTask.setThreadName(URLCONTENT_THREAD_NAME);
-        SaveServerInfoTask serverInfoTask = new SaveServerInfoTask(onlineNumberDao, urlContentDao);
+        SaveServerInfoTask serverInfoTask = new SaveServerInfoTask(onlineNumberService);
         serverInfoTask.setThreadName(SERVERINFO_THREAD_NAME);
+        UpdateServerOpenDaysTask updateServerOpenDaysTask = new UpdateServerOpenDaysTask(allServerInfoService);
+        updateServerOpenDaysTask.setThreadName(SERVER_OPEN_DAYS_THREAD_NAME);
 
         long beforeTime = System.currentTimeMillis();
         boolean isCheckPeriod = true;
@@ -42,9 +46,12 @@ public class AllTask {
             boolean isTimeOut = now - beforeTime > MONITOR_TIME_OUT;
             if (now % SAVE_SERVER_INFO_PERIOD < MAX_ERROR_RANGE || isTimeOut) {
                 isCheckPeriod = false;
-                scheduledExecutor.scheduleAtFixedRate(urlContentTask, URLCONTENT_TASK_INITIALDELAY, SAVE_URLCONTENT_PERIOD, TimeUnit.MILLISECONDS);
+                scheduledExecutor.scheduleAtFixedRate(urlContentTask, SAVE_URLCONTENT_TASK_INITIALDELAY, SAVE_URLCONTENT_PERIOD, TimeUnit.MILLISECONDS);
                 scheduledExecutor.scheduleAtFixedRate(serverInfoTask, SAVE_SERVER_INFO_PERIOD, SAVE_SERVER_INFO_PERIOD, TimeUnit.MILLISECONDS);
-                logger.info("开启定时任务成功！");
+                long updateServerOpenDayDelay = DateManager.getInstance().getUpdateServerOpenDaysTaskDelayTime(now, UPDATE_SERVER_OPEN_DAYS_TIME);
+                scheduledExecutor.scheduleAtFixedRate(updateServerOpenDaysTask, updateServerOpenDayDelay, UPDATE_SERVER_OPEN_DAYS_PERIOD, TimeUnit.MILLISECONDS);
+                logger.info("开启3个自动更新定时任务成功， " + DateUtil.getRemainTime(SAVE_URLCONTENT_TASK_INITIALDELAY) + "后第一次执行自动更新网页内容任务， " +
+                        DateUtil.getRemainTime(SAVE_SERVER_INFO_PERIOD) + "后，第一次执行自动添加服务器在线人数信息任务， " + DateUtil.getRemainTime(updateServerOpenDayDelay) + "后第一次执行自动更新服务器开服天数任务");
             }
 
             if (isTimeOut) {
@@ -55,14 +62,13 @@ public class AllTask {
 
     /**
      * 监视线程任务
-     * @param onlineNumberDao
-     * @param urlContentDao
+     * @param onlineNumberService
      */
-    public void executeMonitorThreadTask(IOnlineNumber onlineNumberDao, IUrlContent urlContentDao) {
+    public void executeMonitorThreadTask(IUrlContentService urlContentService, IOnlineNumberService onlineNumberService, IAllServerInfoService allServerInfoService) {
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor(new MyThreadFactory(NAME_PREVIOUS_MONITOR_POOL));
-        MonitorThreadPoolTask monitorThreadPoolTask = new MonitorThreadPoolTask(this.scheduledExecutor, onlineNumberDao, urlContentDao);
+        MonitorThreadPoolTask monitorThreadPoolTask = new MonitorThreadPoolTask(this.scheduledExecutor, urlContentService, onlineNumberService, allServerInfoService);
         monitorThreadPoolTask.setThreadName(MONITOR_THREAD_NAME);
-        executorService.scheduleAtFixedRate(monitorThreadPoolTask, MONITOR_THREAD_POOL_PERIOD, MONITOR_THREAD_POOL_PERIOD, TimeUnit.MILLISECONDS);
+        executorService.scheduleAtFixedRate(monitorThreadPoolTask, MONITOR_THREAD_POOL_DELAY, MONITOR_THREAD_POOL_PERIOD, TimeUnit.MILLISECONDS);
         logger.info("监视线程已启动！");
     }
 

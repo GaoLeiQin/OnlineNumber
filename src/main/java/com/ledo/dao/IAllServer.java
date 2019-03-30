@@ -17,4 +17,6 @@ public interface IAllServer {
     ArrayList<AllServerInfo> queryByCondition(AllServerInfo allServerInfo);
     /** 只更新Linux服务器的在线人数信息 */
     void updateOnlineNumbersInfo(@Param("onlineNum")int onlineNum, @Param("zoneId")int zoneId);
+    /** 只更新Linux服务器的开服天数信息 */
+    void updateServerOpenDaysInfo(@Param("openTime")String openTime, @Param("openDays")int openDays);
 }

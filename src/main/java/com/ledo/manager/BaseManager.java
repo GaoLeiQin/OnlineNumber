@@ -10,10 +10,4 @@ import org.apache.log4j.Logger;
 public class BaseManager {
     public static Logger logger = Logger.getLogger(BaseManager.class);
 
-    public static BaseManager instance = new BaseManager();
-
-    public static BaseManager getInstance() {
-        return instance;
-    }
-
 }

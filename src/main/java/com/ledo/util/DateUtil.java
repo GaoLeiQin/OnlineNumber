@@ -2,6 +2,7 @@ package com.ledo.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import static javax.management.timer.Timer.*;
@@ -14,7 +15,8 @@ import static javax.management.timer.Timer.*;
 public class DateUtil {
 
     /** 日期串格式 */
-    public static final String DATE_PATTERN = "yyyy-MM-dd HH:mm:ss";
+    public static final String ABSOLUTE_DATE_PATTERN = "yyyy-MM-dd HH:mm:ss";
+    public static final String SIMPLE_DATE_PATTERN = "yyyy-MM-dd";
 
     /**
      * 根据毫秒数(String)返回标准的日期串
@@ -23,7 +25,7 @@ public class DateUtil {
      */
     public static String getFormatDateByMillSecond(String timeString) {
         Date date = new Date(Long.valueOf(timeString));
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_PATTERN);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ABSOLUTE_DATE_PATTERN);
         return simpleDateFormat.format(date);
     }
 
@@ -34,7 +36,7 @@ public class DateUtil {
      */
     public static String getFormatDateByMillSecond(long time) {
         Date date = new Date(time);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_PATTERN);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ABSOLUTE_DATE_PATTERN);
         return simpleDateFormat.format(date);
     }
 
@@ -44,7 +46,7 @@ public class DateUtil {
      * @return 毫秒
      */
     public static long getMilliSecondByFormatDate(String strTime) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_PATTERN);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ABSOLUTE_DATE_PATTERN);
         try {
             return simpleDateFormat.parse(strTime).getTime();
         } catch (ParseException e) {
@@ -59,7 +61,7 @@ public class DateUtil {
      */
     public static String getNowFormatDate() {
         Date date = new Date(System.currentTimeMillis());
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_PATTERN);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ABSOLUTE_DATE_PATTERN);
         return simpleDateFormat.format(date);
     }
 
@@ -85,7 +87,7 @@ public class DateUtil {
      */
     public static int getIntervalDays(String formatDate) throws ParseException {
         int openDays = 0;
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_PATTERN);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ABSOLUTE_DATE_PATTERN);
         long openTime = simpleDateFormat.parse(formatDate).getTime();
         String remainTime = getRemainTime(System.currentTimeMillis() - openTime);
         int index = remainTime.indexOf("天");
@@ -102,7 +104,7 @@ public class DateUtil {
      * @return
      */
     public static String getRemainTime(long time) {
-        String remainTime = " ";
+        String remainTime = "";
         long second = 0;
         long minute = 0;
         long hour = 0;
@@ -129,6 +131,34 @@ public class DateUtil {
         }
 
         return remainTime;
+    }
+
+    /**
+     * 获取推迟一天后的日期
+     * @param time 输入时间 (格式:"yyyy-MM-dd")
+     * @return 返回时间 (格式:"yyyy-MM-dd")
+     */
+    public static String getAfterOneDay(String time) {
+        return getAfterDay(time, 1);
+    }
+
+    /**
+     * 获取输入时间的后几天
+     * @param time 输入时间 (格式:"yyyy-MM-dd")
+     * @param day 推迟天数
+     * @return 推迟后的日期 (格式:"yyyy-MM-dd")
+     */
+    public static String getAfterDay(String time, int day) {
+        Calendar calendar = Calendar.getInstance();
+        Date date = null;
+        try {
+            date = new SimpleDateFormat(SIMPLE_DATE_PATTERN).parse(time);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        calendar.setTime(date);
+        calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + day);
+        return new SimpleDateFormat(SIMPLE_DATE_PATTERN).format(calendar.getTime());
     }
 
 }

@@ -7,6 +7,7 @@ import com.ledo.beans.UrlContent;
 import com.ledo.manager.PageManager;
 import com.ledo.manager.URLManager;
 import com.ledo.service.*;
+import com.ledo.task.AllTask;
 import com.ledo.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -35,24 +36,20 @@ public class AdministratorController {
     IUrlContentService urlContentService;
 
     @Autowired
-    @Qualifier("guestService")
-    IGuestService guestService;
+    @Qualifier("onlineNumberService")
+    IOnlineNumberService onlineNumberService;
 
     @Autowired
     @Qualifier("allServerInfoService")
     IAllServerInfoService allServerInfoService;
 
     @Autowired
-    @Qualifier("onlineNumberService")
-    IOnlineNumberService onlineNumberService;
+    @Qualifier("guestService")
+    IGuestService guestService;
 
     @Autowired
     @Qualifier("rechargeInfoService")
     IRechargeInfoService rechargeInfoService;
-
-    @Autowired
-    @Qualifier("administratorService")
-    IAdministratorService administratorService;
 
     @RequestMapping("/adminShow.do")
     public ModelAndView adminShow(boolean isUpdateLinuxServerInfo, String userName,
@@ -83,7 +80,8 @@ public class AdministratorController {
         if (isNowStartTask && !isOpenedTask) {
             isOpenedTask = true;
             userName = START_TASK_OPERATION;
-            administratorService.openAutoUpdateTask();
+            AllTask.getInstance().startAutoUpdateTask(urlContentService, onlineNumberService, allServerInfoService);
+            AllTask.getInstance().executeMonitorThreadTask(urlContentService, onlineNumberService, allServerInfoService);
         }
 
         guestService.addGuestInfo(request, userName);
@@ -123,7 +121,7 @@ public class AdministratorController {
     @RequestMapping("/autoInsertOnlineServerInfo.do")
     public ModelAndView AutoInsertOnlineServerInfo(){
         ModelAndView mv = new ModelAndView();
-        administratorService.addServerInfo();
+        onlineNumberService.addServerInfo();
         ArrayList<ServerHistoryInfo> serverHistoryInfoByLimit = onlineNumberService.referServerHistoryInfoByLimit25();
         mv.addObject("serverHistoryInfoByLimit", serverHistoryInfoByLimit);
         mv.setViewName("autoInsertOnlineServerInfo");

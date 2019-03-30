@@ -1,7 +1,5 @@
+import com.ledo.util.DateUtil;
 import org.junit.Test;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 import static javax.management.timer.Timer.*;
 
@@ -13,6 +11,36 @@ import static javax.management.timer.Timer.*;
 public class DateUtilTest extends BaseTest{
     @Test
     public void test() {
+        long delayTime = 0;
+        String nowTime = "2018-11-14 00:39:00";
+        long now = DateUtil.getMilliSecondByFormatDate(nowTime);
+        System.out.println(nowTime);
+        String ymd = nowTime.substring(0, 10);
+        String i = " 11:00:00";
+        // 获取当前时间的xx小时
+        int hour= Integer.valueOf(nowTime.substring(11, 13));
+        if (hour == 11 && now % ONE_HOUR == 0) {
+            // 当前时间刚好是11:00:00
+            // 延迟10秒
+            delayTime = 10 * ONE_SECOND;
+        }else if (hour < 11) {
+            // 如果还没到11点
+            String aimTime = ymd + i;
+            delayTime = DateUtil.getMilliSecondByFormatDate(aimTime) - now;
+        }else {
+            // 如果今天已经过了11点
+            // 如果还没到11点,延后一天
+            String date = DateUtil.getAfterOneDay(ymd);
+            String aimTime = date + i;
+            System.out.println(aimTime);
+            delayTime = DateUtil.getMilliSecondByFormatDate(aimTime) - now;
+        }
+
+        System.out.println(delayTime);
+        System.out.println(DateUtil.getRemainTime(delayTime));
+    }
+
+    public void remainTimeTest() {
         long time = ONE_HOUR * 242;
         System.out.println(getRemainTime(time));
         int index = getRemainTimeByTimer(time).indexOf("天");

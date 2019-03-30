@@ -88,6 +88,8 @@ public class UrlContentServiceImpl extends BaseService implements IUrlContentSer
                 urlContentDao.insertUrlContent(urlContent);
             }
         }
+
+        logger.warn("QHSJSERVERINFO " + urlContentDao.queryUrlContents());
     }
 
 }

@@ -19,6 +19,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-ma
 		update all_server_info set onlineNum = #{onlineNum} where zoneId = #{zoneId};
 	</update>
 
+	<!--只更新Linux服务器的在线人数信息-->
+	<update id="updateServerOpenDaysInfo">
+		update all_server_info set openDays = #{openDays} where openTime = #{openTime};
+	</update>
+
 	<select id="queryAllServerInfo" resultType="AllServerInfo">
 		select channel,zoneId,serverName,optOrId,ip,hostName,onlineNum,openTime,openDays from all_server_info;
 	</select>

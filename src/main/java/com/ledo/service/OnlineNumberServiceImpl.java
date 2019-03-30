@@ -3,6 +3,8 @@ package com.ledo.service;
 import com.ledo.beans.Page;
 import com.ledo.beans.ServerHistoryInfo;
 import com.ledo.dao.IOnlineNumber;
+import com.ledo.dao.IUrlContent;
+import com.ledo.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,10 @@ import java.util.ArrayList;
  */
 @Service("onlineNumberService")
 public class OnlineNumberServiceImpl extends BaseService implements IOnlineNumberService{
+    @Autowired
+    @Qualifier("IUrlContent")
+    private IUrlContent urlContentDao;
+
 
     @Autowired
     @Qualifier("IOnlineNumber")
@@ -46,5 +52,17 @@ public class OnlineNumberServiceImpl extends BaseService implements IOnlineNumbe
         return onlineNumberDao.queryHistoryInfoByCondition(historyByCondition);
     }
 
+    @Override
+    public void addServerInfo() {
+        ServerHistoryInfo server = new ServerHistoryInfo(DateUtil.getNowFormatDate(), urlContentDao.queryOfficialSum(), urlContentDao.queryMixSum(),
+                urlContentDao.queryGatSum(), urlContentDao.queryAllSum());
+
+        boolean isUrlContentNull = urlContentDao.queryOfficialSum() == null || urlContentDao.queryMixSum() == null ||
+                urlContentDao.queryGatSum() == null || urlContentDao.queryAllSum() == null;
+        if (isUrlContentNull) {
+            logger.error(" &$& 删除数据库，网页访问为空的数据：" + server);
+        }
+        onlineNumberDao.insertServerInfo(server);
+    }
 
 }

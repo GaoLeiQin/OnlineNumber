@@ -4,6 +4,7 @@ import com.ledo.beans.AllServerInfo;
 import com.ledo.beans.UrlContent;
 import com.ledo.dao.IAllServer;
 import com.ledo.dao.IUrlContent;
+import com.ledo.manager.DateManager;
 import com.ledo.manager.FileManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import static com.ledo.common.FileConstant.*;
 
@@ -44,6 +46,14 @@ public class AllServerInfoServiceImpl extends BaseService implements IAllServerI
         ArrayList<UrlContent> urlContents = urlContentDao.queryUrlContents();
         for (UrlContent urlContent : urlContents) {
             allServerDao.updateOnlineNumbersInfo(urlContent.getOnlineNum(), urlContent.getZoneId());
+        }
+    }
+
+    @Override
+    public void onlyUpdateServerOpenDaysInfo() {
+        HashMap<String, Integer> openDaysMap = DateManager.getInstance().getOpenDaysByServerOpenTime(referAllServerInfo());
+        for (Map.Entry<String, Integer> openDaysEntry : openDaysMap.entrySet()) {
+            allServerDao.updateServerOpenDaysInfo(openDaysEntry.getKey(),openDaysEntry.getValue());
         }
     }
 
@@ -96,7 +106,7 @@ public class AllServerInfoServiceImpl extends BaseService implements IAllServerI
             hostName = zoneNameAndId.get(zoneId);
             if (serverOpenDays.containsKey(zoneId)) {
                 openTime = serverOpenDays.get(zoneId);
-                openDays = FileManager.getServerOpenDays(openTime);
+                openDays = DateManager.getInstance().getServerOpenDays(openTime);
             }
             if (zoneOpt.containsKey(hostName)) {
                 String[] idAndIp = zoneOpt.get(hostName).split("=");
@@ -106,10 +116,10 @@ public class AllServerInfoServiceImpl extends BaseService implements IAllServerI
                 }
                 allServerDao.insertLinuxServerInfo(new AllServerInfo(channel, zoneId, serverName, optOrId, ip, hostName, content.getOnlineNum(), openTime, openDays));
             }else {
-                logger.info("更新Linux信息失败:" + zoneId + " " + hostName);
+                logger.error("更新Linux信息失败，未知zoneId:" + zoneId + " 未知hostName：" + hostName);
             }
         }else {
-            logger.info("新开服:" + zoneId + " " + serverName);
+            logger.error("更新Linux信息失败，新开服:" + zoneId + " " + serverName);
             allServerDao.insertLinuxServerInfo(new AllServerInfo(channel, zoneId, serverName, optOrId, "新开服", "Opt Or ID、IP、HostName待更新", content.getOnlineNum(), openTime, openDays));
         }
     }

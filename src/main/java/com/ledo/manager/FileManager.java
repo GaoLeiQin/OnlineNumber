@@ -5,7 +5,6 @@ import com.ledo.util.DateUtil;
 import com.ledo.util.RegularUtil;
 
 import java.io.*;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -185,22 +184,6 @@ public class FileManager extends BaseManager{
         return gatOpenDays;
     }
 
-    /**
-     * 获取开服天数
-     * @param serverOpenTime
-     * @return
-     */
-    public static int getServerOpenDays(String serverOpenTime) {
-        int openDays = 0;
-        try {
-            openDays = DateUtil.getIntervalDays(serverOpenTime);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            logger.error("获取开服天数失败 " + e);
-        }
-        return openDays;
-    }
-
     /********************************** 充值信息相关文件内容处理方法 *****************************************/
 
     /**
@@ -331,7 +314,7 @@ public class FileManager extends BaseManager{
      * @param name 文件名
      * @return zoneId
      */
-    private static int getZoneIdByFilename(String name) {
+    private int getZoneIdByFilename(String name) {
         int zoneId = 0;
         String fileName = name.substring(39).split("\\.")[0];
         if (fileName.contains("gat")) {

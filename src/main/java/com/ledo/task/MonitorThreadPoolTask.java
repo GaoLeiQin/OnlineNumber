@@ -1,7 +1,8 @@
 package com.ledo.task;
 
-import com.ledo.dao.IOnlineNumber;
-import com.ledo.dao.IUrlContent;
+import com.ledo.service.IAllServerInfoService;
+import com.ledo.service.IOnlineNumberService;
+import com.ledo.service.IUrlContentService;
 
 import java.util.List;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -13,13 +14,13 @@ import static com.ledo.common.ThreadContant.CORE_POOL_SIZE;
  * @author qgl
  * @date 2018/11/14
  */
-public class MonitorThreadPoolTask extends Task {
-    private ScheduledThreadPoolExecutor scheduledExecutor = null;
+public class MonitorThreadPoolTask extends BaseTask {
 
-    public MonitorThreadPoolTask(ScheduledThreadPoolExecutor scheduledExecutor, IOnlineNumber onlineNumberDao, IUrlContent urlContentDao) {
+    public MonitorThreadPoolTask(ScheduledThreadPoolExecutor scheduledExecutor, IUrlContentService urlContentService, IOnlineNumberService onlineNumberService, IAllServerInfoService allServerInfoService) {
         this.scheduledExecutor = scheduledExecutor;
-        this.onlineNumberDao = onlineNumberDao;
-        this.urlContentDao = urlContentDao;
+        this.urlContentService = urlContentService;
+        this.onlineNumberService = onlineNumberService;
+        this.allServerInfoService = allServerInfoService;
     }
 
     @Override
@@ -33,14 +34,14 @@ public class MonitorThreadPoolTask extends Task {
     public void inspectThreadPoolState() {
         long alltTaskCount = this.scheduledExecutor.getTaskCount();
         long completeCount = this.scheduledExecutor.getCompletedTaskCount();
-        long waittingTaskCount = alltTaskCount - completeCount;
-        int needRunningTaskCount = CORE_POOL_SIZE - 1;
-        if (waittingTaskCount < needRunningTaskCount) {
-            int stopTaskCount = this.restart(onlineNumberDao, urlContentDao);
-            logger.error("当前等待运行的任务 " + waittingTaskCount + " 个，需要一直运行的任务 " +
+        long waitingTaskCount = alltTaskCount - completeCount;
+        int needRunningTaskCount = CORE_POOL_SIZE;
+        if (waitingTaskCount < needRunningTaskCount) {
+            int stopTaskCount = this.restart();
+            logger.error("当前等待运行的任务 " + waitingTaskCount + " 个，需要一直运行的任务 " +
                     needRunningTaskCount + " 个，所以必须重启自动更新线程！！！已暂停等待执行任务 " + stopTaskCount + " 个");
         }else {
-            logger.info("线程池工作正常，正在等待运行的任务 " + waittingTaskCount + " 个");
+            logger.info("线程池工作正常，正在等待运行的任务 " + waitingTaskCount + " 个");
         }
     }
 
@@ -48,7 +49,7 @@ public class MonitorThreadPoolTask extends Task {
      * 重启自动更新线程
      * @return 已暂停等待执行任务数量
      */
-    public int restart(IOnlineNumber onlineNumberDao, IUrlContent urlContentDao) {
+    public int restart() {
         int stopTaskCount = -1;
         if (this.scheduledExecutor.getTaskCount() > 0) {
             List<Runnable> runnableList = this.scheduledExecutor.shutdownNow();
@@ -56,7 +57,7 @@ public class MonitorThreadPoolTask extends Task {
         }else {
             this.scheduledExecutor = null;
         }
-        AllTask.getInstance().startAutoUpdateTask(onlineNumberDao, urlContentDao);
+        AllTask.getInstance().startAutoUpdateTask(urlContentService, onlineNumberService, allServerInfoService);
         return stopTaskCount;
     }
 }

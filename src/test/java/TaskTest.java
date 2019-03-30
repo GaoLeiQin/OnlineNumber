@@ -3,8 +3,7 @@ import com.ledo.util.DateUtil;
 import org.junit.Test;
 
 import java.util.List;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 import static com.ledo.common.ThreadContant.*;
 
@@ -18,24 +17,29 @@ public class TaskTest extends BaseTest {
     @Test
     public void threadPoolStatus() {
 
+        try {
+            TimeUnit.SECONDS.sleep(2);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         ScheduledThreadPoolExecutor s = new ScheduledThreadPoolExecutor(CORE_POOL_SIZE);
         System.out.println(" ，任务数量：" + s.getTaskCount());
         logger.info("是否关闭：" + s.isShutdown() + "，关闭后所有任务是否都已完成：" + s.isTerminated());
-        MonitorThreadPoolTask urlContentTask = new MonitorThreadPoolTask(null, null, null);
-        urlContentTask.setThreadName(MONITOR_THREAD_NAME);
-        logger.info("启动之前：" + " 线程名称：" + urlContentTask.getName() + "，线程Id：" + urlContentTask.getId() + "，线程优先级：" + urlContentTask.getPriority() +
-                " ，线程状态：" + urlContentTask.getState() + " ，线程组：" + urlContentTask.getThreadGroup() + "，isAlive：" + urlContentTask.isAlive() +
-                "，isDaemon：" + urlContentTask.isDaemon() + "，isInterrupted：" + urlContentTask.isInterrupted());
+        SaveServerInfoTask urlContentTask = new SaveServerInfoTask(0);
 
         s.scheduleAtFixedRate(urlContentTask, 1, 10, TimeUnit.SECONDS);
+        BlockingQueue<Runnable> blockingQueue = s.getQueue();
+        for (Runnable runnable : blockingQueue) {
+            System.out.println(runnable.toString());
+        }
         logger.info("线程队列：" + s.getQueue() + " ，活跃的线程数：" + s.getActiveCount() + " ，任务数量：" + s.getTaskCount() +
                 "，已执行任务数量：" + s.getCompletedTaskCount() + "，是否允许核心线程超时：" + s.allowsCoreThreadTimeOut());
 
-        List<Runnable> runnableList = s.shutdownNow();
-        System.out.println(" 已关闭任务数量：" + s.getTaskCount());
-        for (Runnable runnable : runnableList) {
-            System.out.println(runnable.toString());
-        }
+//        List<Runnable> runnableList = s.shutdownNow();
+//        System.out.println(" 已关闭任务数量：" + s.getTaskCount());
+//        for (Runnable runnable : runnableList) {
+//            System.out.println(runnable.toString());
+//        }
         logger.info("是否关闭：" + s.isShutdown() + "，关闭后所有任务是否都已完成：" + s.isTerminated());
 
     }
@@ -46,8 +50,8 @@ public class TaskTest extends BaseTest {
         com.ledo.task.SaveUrlContentTask urlContentTask = new com.ledo.task.SaveUrlContentTask(null);
         urlContentTask.setThreadName(URLCONTENT_THREAD_NAME);
         ScheduledThreadPoolExecutor pool = new ScheduledThreadPoolExecutor(4);
-        pool.scheduleAtFixedRate(urlContentTask, URLCONTENT_TASK_INITIALDELAY, SAVE_URLCONTENT_PERIOD, TimeUnit.MILLISECONDS);
-        com.ledo.task.SaveServerInfoTask serverInfoTask = new com.ledo.task.SaveServerInfoTask(null, null);
+        pool.scheduleAtFixedRate(urlContentTask, 0, SAVE_URLCONTENT_PERIOD, TimeUnit.MILLISECONDS);
+        com.ledo.task.SaveServerInfoTask serverInfoTask = new com.ledo.task.SaveServerInfoTask(null);
         serverInfoTask.setThreadName(SERVERINFO_THREAD_NAME);
     }
 
@@ -60,7 +64,6 @@ public class TaskTest extends BaseTest {
                 System.out.println(i - now);
             }
         }
-        logger.info(DateUtil.getMilliSecondByFormatDate("2018-11-14 13:39:00"));
         logger.info(DateUtil.getMilliSecondByFormatDate("2018-11-14 13:40:00"));
         logger.info(DateUtil.getMilliSecondByFormatDate("2018-11-14 13:49:00"));
         logger.info(DateUtil.getMilliSecondByFormatDate("2018-11-14 13:49:00") - DateUtil.getMilliSecondByFormatDate("2018-11-14 13:39:00"));
