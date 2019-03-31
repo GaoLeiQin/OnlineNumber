@@ -32,9 +32,9 @@ public class MonitorThreadPoolTask extends BaseTask {
      * 定期检查线程池的运行状态
      */
     public void inspectThreadPoolState() {
-        long alltTaskCount = this.scheduledExecutor.getTaskCount();
+        long allTaskCount = this.scheduledExecutor.getTaskCount();
         long completeCount = this.scheduledExecutor.getCompletedTaskCount();
-        long waitingTaskCount = alltTaskCount - completeCount;
+        long waitingTaskCount = allTaskCount - completeCount;
         int needRunningTaskCount = CORE_POOL_SIZE;
         if (waitingTaskCount < needRunningTaskCount) {
             int stopTaskCount = this.restart();

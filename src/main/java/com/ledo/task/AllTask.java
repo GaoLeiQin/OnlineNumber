@@ -1,6 +1,5 @@
 package com.ledo.task;
 
-import com.ledo.manager.DateManager;
 import com.ledo.service.IAllServerInfoService;
 import com.ledo.service.IOnlineNumberService;
 import com.ledo.service.IUrlContentService;
@@ -32,32 +31,10 @@ public class AllTask {
      */
     public void startAutoUpdateTask(IUrlContentService urlContentService, IOnlineNumberService onlineNumberService, IAllServerInfoService allServerInfoService) {
         scheduledExecutor = new ScheduledThreadPoolExecutor(CORE_POOL_SIZE, new MyThreadFactory(NAME_PREVIOUS_UPDATE_DATA_POOL));
-        SaveUrlContentTask urlContentTask = new SaveUrlContentTask(urlContentService);
-        urlContentTask.setThreadName(URLCONTENT_THREAD_NAME);
-        SaveServerInfoTask serverInfoTask = new SaveServerInfoTask(onlineNumberService);
-        serverInfoTask.setThreadName(SERVERINFO_THREAD_NAME);
-        UpdateServerOpenDaysTask updateServerOpenDaysTask = new UpdateServerOpenDaysTask(allServerInfoService);
-        updateServerOpenDaysTask.setThreadName(SERVER_OPEN_DAYS_THREAD_NAME);
-
-        long beforeTime = System.currentTimeMillis();
-        boolean isCheckPeriod = true;
-        while (isCheckPeriod) {
-            long now = System.currentTimeMillis();
-            boolean isTimeOut = now - beforeTime > MONITOR_TIME_OUT;
-            if (now % SAVE_SERVER_INFO_PERIOD < MAX_ERROR_RANGE || isTimeOut) {
-                isCheckPeriod = false;
-                scheduledExecutor.scheduleAtFixedRate(urlContentTask, SAVE_URLCONTENT_TASK_INITIALDELAY, SAVE_URLCONTENT_PERIOD, TimeUnit.MILLISECONDS);
-                scheduledExecutor.scheduleAtFixedRate(serverInfoTask, SAVE_SERVER_INFO_PERIOD, SAVE_SERVER_INFO_PERIOD, TimeUnit.MILLISECONDS);
-                long updateServerOpenDayDelay = DateManager.getInstance().getUpdateServerOpenDaysTaskDelayTime(now, UPDATE_SERVER_OPEN_DAYS_TIME);
-                scheduledExecutor.scheduleAtFixedRate(updateServerOpenDaysTask, updateServerOpenDayDelay, UPDATE_SERVER_OPEN_DAYS_PERIOD, TimeUnit.MILLISECONDS);
-                logger.info("开启3个自动更新定时任务成功， " + DateUtil.getRemainTime(SAVE_URLCONTENT_TASK_INITIALDELAY) + "后第一次执行自动更新网页内容任务， " +
-                        DateUtil.getRemainTime(SAVE_SERVER_INFO_PERIOD) + "后，第一次执行自动添加服务器在线人数信息任务， " + DateUtil.getRemainTime(updateServerOpenDayDelay) + "后第一次执行自动更新服务器开服天数任务");
-            }
-
-            if (isTimeOut) {
-                logger.error(" 立即开启任务！！！，(TimeOut) 已经寻找了 " + MONITOR_TIME_OUT + " ms，但没有找到合适的时间开启线程！");
-            }
-        }
+        long delayTime = DateUtil.getWaitingLongTime(SAVE_SERVER_INFO_PERIOD);
+        ScheduledExecutorService executorTaskThread = Executors.newSingleThreadScheduledExecutor(new MyThreadFactory(NAME_PREVIOUS_DELAY_EXECUTE_POOL));
+        executorTaskThread.schedule(new DelayExeScheduleTask(scheduledExecutor, urlContentService, onlineNumberService, allServerInfoService), delayTime, TimeUnit.MILLISECONDS);
+        logger.info("在 " + DateUtil.getRemainTime(delayTime) + " 后，将执行自动更新线程");
     }
 
     /**

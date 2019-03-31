@@ -15,7 +15,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 public abstract class BaseTask extends Thread {
     public Logger logger = Logger.getLogger(AllTask.class);
 
-    public ScheduledThreadPoolExecutor scheduledExecutor = null;
+    public ScheduledThreadPoolExecutor scheduledExecutor;
     public IUrlContentService urlContentService;
     public IOnlineNumberService onlineNumberService;
     public IAllServerInfoService allServerInfoService;

@@ -15,6 +15,8 @@ public class ThreadContant {
     public static final String NAME_PREVIOUS_UPDATE_DATA_POOL = "kof_world";
     /** 监控任务单线程 线程池名称前缀 */
     public static final String NAME_PREVIOUS_MONITOR_POOL = "monitor";
+    /** 延迟执行自动更新任务单线程 线程池名称前缀 */
+    public static final String NAME_PREVIOUS_DELAY_EXECUTE_POOL = "delay_execute";
 
     // 线程名称
     /** 更新网页内容线程名称 */
@@ -27,10 +29,6 @@ public class ThreadContant {
     public static final String MONITOR_THREAD_NAME = "MonitorTask";
 
     // 开启线程检测的时间配置
-    /** 检测合适的时间，最多检测 20 分钟，否则超时立即执行线程，防止出现死循环 */
-    public static final long MONITOR_TIME_OUT = 20 * ONE_MINUTE;
-    /** 检测到合适的时间，该时间的最大误差: 0.5 秒 */
-    public static final long MAX_ERROR_RANGE = 500;
     /** 保存网页内容的周期：1 分钟 */
     public static final long SAVE_URLCONTENT_PERIOD = ONE_MINUTE;
     /** 检测线程池运行状态任务的周期：1 小时 */
@@ -41,7 +39,7 @@ public class ThreadContant {
     public static final long SAVE_SERVER_INFO_PERIOD = 10 * ONE_MINUTE;
     /** 更新服务器开服天数任务的时间点，每天的 11:00:10 */
     public static final String UPDATE_SERVER_OPEN_DAYS_TIME = " 11:00:10";
-    /** 检测线程池运行状态任务的开始延迟：1小时10秒，达到期望的检测时间点 xx:xx:20 */
+    /** 检测线程池运行状态任务的开始延迟：1小时20秒，达到期望的检测时间点 xx:xx:20 */
     public static final long MONITOR_THREAD_POOL_DELAY = ONE_HOUR + 20 * ONE_SECOND;
     /** 保存网页内容任务的延迟时间：27 秒，因为保存网页内容到数据库的SQL语句需要2.7秒左右
      这两个时间加起来一共延迟30秒左右，就可以达到更新完成时间是 xx:xx:30 的期望时间 */

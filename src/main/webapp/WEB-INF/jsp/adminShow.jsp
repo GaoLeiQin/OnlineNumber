@@ -138,7 +138,7 @@
 <script type="text/javascript">
     function openAutoUpdateTask() {
         var isOpen = false;
-        <% String waitingTime = DateUtil.getWaitingTime(SAVE_SERVER_INFO_PERIOD); %>
+        <% String waitingTime = DateUtil.getWaitingStrTime(SAVE_SERVER_INFO_PERIOD); %>
         if (confirm("还需：<%=waitingTime%> 后才能开启线程，请耐心等待......")) {
             isOpen = true;
         }

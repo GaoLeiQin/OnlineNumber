@@ -67,14 +67,29 @@ public class DateUtil {
 
     /**
      * 获取当前距离整点（xx:x0:00）的时间
-     * @return
+     * @return xx分xx秒
      */
-    public static String getWaitingTime(long integerNumber) {
+    public static String getWaitingStrTime(long integerNumber) {
         String remainSeconds = null;
         long now = System.currentTimeMillis();
         for (long i = now; i < now + integerNumber; i++) {
             if (i % integerNumber == 0) {
                 remainSeconds = getRemainTime(i - now);
+            }
+        }
+        return remainSeconds;
+    }
+
+    /**
+     * 获取当前距离整点（xx:x0:00）的时间
+     * @return xx分xx秒
+     */
+    public static long getWaitingLongTime(long integerNumber) {
+        long remainSeconds = 0;
+        long now = System.currentTimeMillis();
+        for (long i = now; i < now + integerNumber; i++) {
+            if (i % integerNumber == 0) {
+                remainSeconds = i - now;
             }
         }
         return remainSeconds;
