@@ -35,10 +35,9 @@ public class DelayExeScheduleTask extends BaseTask{
         updateServerOpenDaysTask.setThreadName(SERVER_OPEN_DAYS_THREAD_NAME);
         long now = System.currentTimeMillis();
         scheduledExecutor.scheduleAtFixedRate(urlContentTask, SAVE_URLCONTENT_TASK_INITIALDELAY, SAVE_URLCONTENT_PERIOD, TimeUnit.MILLISECONDS);
-        scheduledExecutor.scheduleAtFixedRate(serverInfoTask, SAVE_SERVER_INFO_PERIOD, SAVE_SERVER_INFO_PERIOD, TimeUnit.MILLISECONDS);
+        scheduledExecutor.scheduleAtFixedRate(serverInfoTask, 0, SAVE_SERVER_INFO_PERIOD, TimeUnit.MILLISECONDS);
         long updateServerOpenDayDelay = DateManager.getInstance().getUpdateServerOpenDaysTaskDelayTime(now, UPDATE_SERVER_OPEN_DAYS_TIME);
         scheduledExecutor.scheduleAtFixedRate(updateServerOpenDaysTask, updateServerOpenDayDelay, UPDATE_SERVER_OPEN_DAYS_PERIOD, TimeUnit.MILLISECONDS);
-        logger.info(scheduledExecutor.getTaskCount() + " 个定时任务开启成功！ " + DateUtil.getRemainTime(SAVE_URLCONTENT_TASK_INITIALDELAY) + "后第一次执行自动更新网页内容任务， " +
-                DateUtil.getRemainTime(SAVE_SERVER_INFO_PERIOD) + "后，第一次执行自动添加服务器在线人数信息任务， " + DateUtil.getRemainTime(updateServerOpenDayDelay) + "后第一次执行自动更新服务器开服天数任务");
+        logger.info("3个定时任务开启成功！添加服务器在线人数信息任务已开始执行，" + DateUtil.getRemainTime(SAVE_URLCONTENT_TASK_INITIALDELAY) + "后第一次执行自动更新网页内容任务，" + DateUtil.getRemainTime(updateServerOpenDayDelay) + "后第一次执行自动更新服务器开服天数任务");
     }
 }

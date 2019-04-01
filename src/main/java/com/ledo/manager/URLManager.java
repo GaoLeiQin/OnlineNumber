@@ -77,7 +77,7 @@ public class URLManager extends BaseManager{
             }
         } catch (IOException e) {
             e.printStackTrace();
-            logger.error("访问超时！！！" + e);
+            logger.error("访问超时！！！ IP：" + url.getHost() + "  " + e);
         } finally {
             try {
                 if (br != null) {

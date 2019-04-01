@@ -10,32 +10,22 @@ public class AllServerInfo {
     private Integer zoneId;
     private String serverName;
     private Integer optOrId;
-    private String ip;
+    private String innerIp;
+    private String outerIp;
     private String hostName;
-    private Integer onlineNum;
     private String openTime;
     private Integer openDays;
 
     public AllServerInfo(){}
 
-    public AllServerInfo(String channel, Integer zoneId, String serverName, Integer optOrId, String ip, String hostName, Integer onlineNum) {
+    public AllServerInfo(String channel, Integer zoneId, String serverName, Integer optOrId, String innerIp, String outerIp, String hostName, String openTime, Integer openDays) {
         this.channel = channel;
         this.zoneId = zoneId;
         this.serverName = serverName;
         this.optOrId = optOrId;
-        this.ip = ip;
+        this.innerIp = innerIp;
+        this.outerIp = outerIp;
         this.hostName = hostName;
-        this.onlineNum = onlineNum;
-    }
-
-    public AllServerInfo(String channel, Integer zoneId, String serverName, Integer optOrId, String ip, String hostName, Integer onlineNum, String openTime, Integer openDays) {
-        this.channel = channel;
-        this.zoneId = zoneId;
-        this.serverName = serverName;
-        this.optOrId = optOrId;
-        this.ip = ip;
-        this.hostName = hostName;
-        this.onlineNum = onlineNum;
         this.openTime = openTime;
         this.openDays = openDays;
     }
@@ -72,12 +62,20 @@ public class AllServerInfo {
         this.optOrId = optOrId;
     }
 
-    public String getIp() {
-        return ip;
+    public String getInnerIp() {
+        return innerIp;
     }
 
-    public void setIp(String ip) {
-        this.ip = ip;
+    public void setInnerIp(String innerIp) {
+        this.innerIp = innerIp;
+    }
+
+    public String getOuterIp() {
+        return outerIp;
+    }
+
+    public void setOuterIp(String outerIp) {
+        this.outerIp = outerIp;
     }
 
     public String getHostName() {
@@ -87,15 +85,6 @@ public class AllServerInfo {
     public void setHostName(String hostName) {
         this.hostName = hostName;
     }
-
-    public Integer getOnlineNum() {
-        return onlineNum;
-    }
-
-    public void setOnlineNum(Integer onlineNum) {
-        this.onlineNum = onlineNum;
-    }
-
 
     public String getOpenTime() {
         return openTime;
@@ -120,11 +109,11 @@ public class AllServerInfo {
                 ", zoneId=" + zoneId +
                 ", serverName='" + serverName + '\'' +
                 ", optOrId=" + optOrId +
-                ", ip='" + ip + '\'' +
+                ", innerIp='" + innerIp + '\'' +
+                ", outerIp='" + outerIp + '\'' +
                 ", hostName='" + hostName + '\'' +
-                ", onlineNum=" + onlineNum +
                 ", openTime='" + openTime + '\'' +
-                ", openDays='" + openDays + '\'' +
+                ", openDays=" + openDays +
                 '}';
     }
 }

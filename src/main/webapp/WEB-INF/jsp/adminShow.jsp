@@ -105,17 +105,17 @@
 <div id="all" style="margin-left: 15%; margin-top: 5%">
     <input class="autoUrlContent" type="button" value="自动更新网站内容网页"
            onclick="javasript:window.open('autoUpdateUrlContent.do')"/> &nbsp; &nbsp;
-    <input class="autoHistory" type="button" value="自动更新数据网页"
-           onclick="javasript:window.open('autoInsertOnlineServerInfo.do')"/> &nbsp; &nbsp;
+    <%--<input class="autoHistory" type="button" value="自动更新数据网页" onclick="javasript:window.open('autoInsertOnlineServerInfo.do')"/> &nbsp; &nbsp;--%>
 
     <c:if test="${!isOpenedTask}">
         <input class="openAutoUpdateTask" type="button" value="开启自动更新定时任务" method="post" onclick="openAutoUpdateTask()"/>
     </c:if>
+    <c:if test="${isOpenedTask}"> <font size="5" color="#b22222">自动更新线程已开启</font></c:if>
 
     <br><br><br><br>
     <input class="queryRechargeInfo" type="button" value="点击查询充值信息" method="post" onclick="queryRechargeInfo()"/> &nbsp; &nbsp;
     <input class="updateRecharge" type="button" value="更新服务器充值数据" method="post" onclick="updateRechargeInfo()"/> &nbsp;&nbsp;
-    充值信息一共 ${rechargeSum} 条 &nbsp; &nbsp;
+    <%--充值信息一共 ${rechargeSum} 条 &nbsp; &nbsp;--%>
     <c:if test="${not empty updateRechargeInfoDate}">
         上次充值信息更新时间：${updateRechargeInfoDate}
     </c:if>

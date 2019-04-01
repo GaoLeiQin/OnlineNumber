@@ -42,14 +42,6 @@ public class AllServerInfoServiceImpl extends BaseService implements IAllServerI
     }
 
     @Override
-    public void onlyUpdateOnlineNumbersInfo() {
-        ArrayList<UrlContent> urlContents = urlContentDao.queryUrlContents();
-        for (UrlContent urlContent : urlContents) {
-            allServerDao.updateOnlineNumbersInfo(urlContent.getOnlineNum(), urlContent.getZoneId());
-        }
-    }
-
-    @Override
     public void onlyUpdateServerOpenDaysInfo() {
         HashMap<String, Integer> openDaysMap = DateManager.getInstance().getOpenDaysByServerOpenTime(referAllServerInfo());
         for (Map.Entry<String, Integer> openDaysEntry : openDaysMap.entrySet()) {
@@ -69,7 +61,7 @@ public class AllServerInfoServiceImpl extends BaseService implements IAllServerI
 
     @Override
     public void updateLinuxServerInfo() {
-        HashMap<Integer, String> inlanZoneNameAndId = FileManager.getInstance().getInlandZoneIdAndName(RECHARGE_LOG_DIRECTORY);
+        HashMap<Integer, String> inlandZoneNameAndId = FileManager.getInstance().getInlandZoneIdAndName(RECHARGE_LOG_DIRECTORY);
         HashMap<Integer, String> gatZoneNameAndId = FileManager.getInstance().getGatZoneIdAndName(RECHARGE_LOG_DIRECTORY);
         HashMap<String, String> zoneOpt = FileManager.getInstance().getZoneOpt(ZONE_OPT_PATH);
         HashMap<Integer, String> daluOpenDays = FileManager.getInstance().getInlandZoneIdAndOpenTime(SERVER_OPENDAYS_PATH);
@@ -79,7 +71,7 @@ public class AllServerInfoServiceImpl extends BaseService implements IAllServerI
             if (content.getChannel().contains("GAT")) {
                 addData(gatZoneNameAndId, zoneOpt, content, gatOpenDays);
             } else {
-                addData(inlanZoneNameAndId, zoneOpt, content, daluOpenDays);
+                addData(inlandZoneNameAndId, zoneOpt, content, daluOpenDays);
             }
         }
     }
@@ -97,7 +89,8 @@ public class AllServerInfoServiceImpl extends BaseService implements IAllServerI
         String serverName = content.getServerName();
 
         int optOrId = 0;
-        String ip = null;
+        String innerIp = null;
+        String outerIp = null;
         String hostName = null;
         String openTime = null;
         int openDays = 0;
@@ -110,17 +103,18 @@ public class AllServerInfoServiceImpl extends BaseService implements IAllServerI
             }
             if (zoneOpt.containsKey(hostName)) {
                 String[] idAndIp = zoneOpt.get(hostName).split("=");
-                if (idAndIp.length > 1) {
+                if (idAndIp.length > 2) {
                     optOrId = Integer.valueOf(idAndIp[0]);
-                    ip = idAndIp[1];
+                    innerIp = idAndIp[1];
+                    outerIp = idAndIp[2];
                 }
-                allServerDao.insertLinuxServerInfo(new AllServerInfo(channel, zoneId, serverName, optOrId, ip, hostName, content.getOnlineNum(), openTime, openDays));
+                allServerDao.insertLinuxServerInfo(new AllServerInfo(channel, zoneId, serverName, optOrId, innerIp, outerIp, hostName, openTime, openDays));
             }else {
                 logger.error("更新Linux信息失败，未知zoneId:" + zoneId + " 未知hostName：" + hostName);
             }
         }else {
             logger.error("更新Linux信息失败，新开服:" + zoneId + " " + serverName);
-            allServerDao.insertLinuxServerInfo(new AllServerInfo(channel, zoneId, serverName, optOrId, "新开服", "Opt Or ID、IP、HostName待更新", content.getOnlineNum(), openTime, openDays));
+            allServerDao.insertLinuxServerInfo(new AllServerInfo(channel, zoneId, serverName, optOrId, "新开服", "Opt Or ID、IP、HostName待更新", " - ", openTime, openDays));
         }
     }
 

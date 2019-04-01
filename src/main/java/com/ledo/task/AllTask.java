@@ -18,8 +18,9 @@ import static com.ledo.common.ThreadContant.*;
  */
 public class AllTask {
     private Logger logger = Logger.getLogger(AllTask.class);
-    private static AllTask instance = new AllTask();
     private ScheduledThreadPoolExecutor scheduledExecutor = null;
+    private static long delayTime = 0;
+    private static AllTask instance = new AllTask();
 
     public static AllTask getInstance() {
         return instance;
@@ -31,7 +32,7 @@ public class AllTask {
      */
     public void startAutoUpdateTask(IUrlContentService urlContentService, IOnlineNumberService onlineNumberService, IAllServerInfoService allServerInfoService) {
         scheduledExecutor = new ScheduledThreadPoolExecutor(CORE_POOL_SIZE, new MyThreadFactory(NAME_PREVIOUS_UPDATE_DATA_POOL));
-        long delayTime = DateUtil.getWaitingLongTime(SAVE_SERVER_INFO_PERIOD);
+        delayTime = DateUtil.getWaitingLongTime(SAVE_SERVER_INFO_PERIOD);
         ScheduledExecutorService executorTaskThread = Executors.newSingleThreadScheduledExecutor(new MyThreadFactory(NAME_PREVIOUS_DELAY_EXECUTE_POOL));
         executorTaskThread.schedule(new DelayExeScheduleTask(scheduledExecutor, urlContentService, onlineNumberService, allServerInfoService), delayTime, TimeUnit.MILLISECONDS);
         logger.info("在 " + DateUtil.getRemainTime(delayTime) + " 后，将执行自动更新线程");
@@ -45,8 +46,9 @@ public class AllTask {
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor(new MyThreadFactory(NAME_PREVIOUS_MONITOR_POOL));
         MonitorThreadPoolTask monitorThreadPoolTask = new MonitorThreadPoolTask(this.scheduledExecutor, urlContentService, onlineNumberService, allServerInfoService);
         monitorThreadPoolTask.setThreadName(MONITOR_THREAD_NAME);
-        executorService.scheduleAtFixedRate(monitorThreadPoolTask, MONITOR_THREAD_POOL_DELAY, MONITOR_THREAD_POOL_PERIOD, TimeUnit.MILLISECONDS);
-        logger.info("监视线程已启动！");
+        long monitorDelayTime = MONITOR_THREAD_POOL_DELAY + delayTime;
+        executorService.scheduleAtFixedRate(monitorThreadPoolTask, monitorDelayTime, MONITOR_THREAD_POOL_PERIOD, TimeUnit.MILLISECONDS);
+        logger.info("监视线程在 "+ DateUtil.getRemainTime(monitorDelayTime) + " 后启动！");
     }
 
     /**

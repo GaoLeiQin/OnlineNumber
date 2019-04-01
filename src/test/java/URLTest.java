@@ -9,16 +9,29 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.ledo.common.URLConstant.OFFICIAL_IP;
 
 public class URLTest extends BaseTest{
+
     @Test
+    public void getUrl() throws MalformedURLException {
+        URL url = new URL("http://124.243.220.124:29034/ServerStatus");
+        System.out.println(url.getHost());
+        System.out.println(url.getPort());
+        System.out.println(url.getPath());
+    }
+
     public void firstTest() {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        map.put(1, null);
+        map.put(2, 5);
+        Integer list = map.get(1);
+        System.out.println(map.remove(2));
         System.out.println(" URL 测试！");
     }
 
-    @Test
     public void timeOut() throws IOException {
         URL url = new URL(OFFICIAL_IP);
         URLConnection urlConnection = url.openConnection();

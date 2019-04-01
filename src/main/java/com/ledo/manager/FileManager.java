@@ -88,10 +88,11 @@ public class FileManager extends BaseManager{
                 String content = str;
                 if (content.contains("[jp_admin]")) {
                     int optOrId = RegularUtil.getNumber(content.substring(0,5));
-                    String ip = content.substring(5,20).trim();
+                    String innerIp = content.substring(5,20).trim();
                     int index = content.indexOf("[jp_admin]");
                     String serverName = content.substring(index - 32, index).trim();
-                    zoneOpt.putIfAbsent(serverName, optOrId + "=" + ip);
+                    String outerIp = content.substring(77).trim();
+                    zoneOpt.putIfAbsent(serverName, optOrId + "=" + innerIp + "=" + outerIp);
                 }
             }
 

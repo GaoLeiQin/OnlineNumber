@@ -11,9 +11,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static com.ledo.common.URLConstant.*;
-import static com.ledo.common.URLConstant.GAT_CHANNEL;
 
 /**
  * 网页内容service 具体实现
@@ -22,7 +22,6 @@ import static com.ledo.common.URLConstant.GAT_CHANNEL;
  */
 @Service("urlContentService")
 public class UrlContentServiceImpl extends BaseService implements IUrlContentService{
-    /** 对网页内容的 CRUD */
     @Autowired
     @Qualifier("IUrlContent")
     private IUrlContent urlContentDao;
@@ -33,7 +32,7 @@ public class UrlContentServiceImpl extends BaseService implements IUrlContentSer
         if (contents.size() < ONLINE_SERVER_SUM) {
             // 等待数据更新
             try {
-                Thread.sleep(5000);
+                TimeUnit.SECONDS.sleep(5);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

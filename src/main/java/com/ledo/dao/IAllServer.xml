@@ -10,26 +10,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-ma
 
 	<!--插入Linux服务器相关信息-->
 	<insert id="insertLinuxServerInfo" parameterType="AllServerInfo">
-		insert into all_server_info(channel,zoneId,serverName,optOrId,ip,hostName,onlineNum,openTime,openDays)
-		values(#{channel},#{zoneId},#{serverName},#{optOrId},#{ip},#{hostName},#{onlineNum},#{openTime},#{openDays});
+		insert into all_server_info(channel,zoneId,serverName,optOrId,innerIp,outerIp,hostName,openTime,openDays)
+		values(#{channel},#{zoneId},#{serverName},#{optOrId},#{innerIp},#{outerIp},#{hostName},#{openTime},#{openDays});
 	</insert>
 
-	<!--只更新Linux服务器的在线人数信息-->
-	<update id="updateOnlineNumbersInfo">
-		update all_server_info set onlineNum = #{onlineNum} where zoneId = #{zoneId};
-	</update>
-
-	<!--只更新Linux服务器的在线人数信息-->
+	<!--只更新Linux服务器的开服天数信息-->
 	<update id="updateServerOpenDaysInfo">
 		update all_server_info set openDays = #{openDays} where openTime = #{openTime};
 	</update>
 
 	<select id="queryAllServerInfo" resultType="AllServerInfo">
-		select channel,zoneId,serverName,optOrId,ip,hostName,onlineNum,openTime,openDays from all_server_info;
+		select channel,zoneId,serverName,optOrId,innerIp,outerIp,hostName,openTime,openDays from all_server_info;
 	</select>
 
 	<select id="queryByCondition" parameterType="AllServerInfo" resultType="AllServerInfo">
-		select channel,zoneId,serverName,optOrId,ip,hostName,onlineNum,openTime,openDays from all_server_info
+		select channel,zoneId,serverName,optOrId,innerIp,outerIp,hostName,openTime,openDays from all_server_info
 		<where>
 			<if test = "channel != null and channel != ''">
 				channel like  CONCAT('%',#{channel},'%')
@@ -43,17 +38,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-ma
 			<if test = "optOrId != null">
 				and optOrId = #{optOrId}
 			</if>
-			<if test = "ip != null and ip != ''">
-				and ip like  CONCAT('%',#{ip},'%')
+			<if test = "innerIp != null and innerIp != ''">
+				and innerIp like  CONCAT('%',#{innerIp},'%')
+			</if>
+			<if test = "outerIp != null and outerIp != ''">
+				and outerIp like  CONCAT('%',#{outerIp},'%')
 			</if>
 			<if test = "hostName != null and hostName != ''">
 				and hostName like  CONCAT('%',#{hostName},'%')
-			</if>
-			<if test = "onlineNum != null and onlineNum >= 0">
-				and <![CDATA[ onlineNum > #{onlineNum}  ]]>
-			</if>
-			<if test = "onlineNum != null and onlineNum &lt;  0">
-				and <![CDATA[ onlineNum < -#{onlineNum}  ]]>
 			</if>
 			<if test = "openTime != null and openTime != ''">
 				and openTime like  CONCAT('%',#{openTime},'%')

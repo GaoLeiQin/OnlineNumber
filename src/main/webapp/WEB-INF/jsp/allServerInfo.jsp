@@ -65,11 +65,6 @@
 <body style="background: url(../images/trbjd_3.png) ; background-size: cover">
 <br>
 <h1 align="center" style="color: #4c4eed">《拳皇世界》服务器信息查询</h1>
-&nbsp; &nbsp
-<a href="queryServerInfoByCondition.do?isUpdate=true"><font color="#b22222">更新服务器在线人数信息</font></a>  &nbsp; &nbsp;
-<c:if test="${not empty updateTime}">
-    上次更新时间：${updateTime}
-</c:if>
 <br>
 
 <form action="queryServerInfoByCondition.do" method="post" style="opacity: 0.88">
@@ -77,9 +72,9 @@
     <input type="text" name="zoneId" value="${serverInfo.zoneId}" style="height:25px; width:150px" placeholder="ZoneId">
     <input type="text" name="serverName" value="${serverInfo.serverName}" style="height:25px; width:150px" placeholder="服务器名称">
     <input type="text" name="optOrId" value="${serverInfo.optOrId}" style="height:25px; width:150px" placeholder="OptOrId">
-    <input type="text" name="ip" value="${serverInfo.ip}" style="height:25px; width:150px" placeholder="IP">
+    <input type="text" name="innerIp" value="${serverInfo.innerIp}" style="height:25px; width:150px" placeholder="内网IP">
+    <input type="text" name="outerIp" value="${serverInfo.outerIp}" style="height:25px; width:150px" placeholder="外网IP">
     <input type="text" name="hostName" value="${serverInfo.hostName}" style="height:25px; width:150px" placeholder="主机名">
-    <input type="text" name="onlineNum" value="${serverInfo.onlineNum}" style="height:25px; width:150px" placeholder="在线人数:正数 > 负数 < ">
     <input type="text" name="openTime" value="${serverInfo.openTime}" style="height:25px; width:150px" placeholder="开服时间" >
     <input type="text" name="openDays" value="${serverInfo.openDays}" style="height:25px; width:150px" placeholder="开服天数:正数 > 负数 <" >
     <input class="query" type="submit" value="查 &nbsp; 询" />
@@ -91,9 +86,9 @@
         <th>ZoneId</th>
         <th>服务器名称</th>
         <th>Opt Or ID</th>
-        <th>IP</th>
+        <th>内网IP</th>
+        <th>外网IP</th>
         <th>HostName</th>
-        <th>在线人数</th>
         <th>开服时间</th>
         <th>开服天数</th>
     </tr>
@@ -103,9 +98,9 @@
             <td><c:out value="${info.zoneId }"/></td>
             <td><c:out value="${info.serverName }"/></td>
             <td><c:out value="${info.optOrId }"/></td>
-            <td><c:out value="${info.ip }"/></td>
+            <td><c:out value="${info.innerIp }"/></td>
+            <td><c:out value="${info.outerIp }"/></td>
             <td><c:out value="${info.hostName }"/></td>
-            <td><c:out value="${info.onlineNum }"/></td>
             <td><c:out value="${info.openTime }"/></td>
             <td><c:out value="${info.openDays }"/></td>
         </tr>

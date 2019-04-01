@@ -87,7 +87,7 @@ public class AdministratorController {
         guestService.addGuestInfo(request, userName);
         mv.addObject("updateLinuxServerInfoDate", updateLinuxServerInfoDate);
         mv.addObject("updateRechargeInfoDate", updateRechargeInfoDate);
-        mv.addObject("rechargeSum", rechargeInfoService.referRechargeInfo().size());
+//        mv.addObject("rechargeSum", rechargeInfoService.referRechargeInfo().size());
         mv.addObject("linuxServerSum", linuxServerSum);
         mv.addObject("isOpenedTask", isOpenedTask);
         mv.setViewName("adminShow");

@@ -41,7 +41,7 @@ public class MonitorThreadPoolTask extends BaseTask {
             logger.error("当前等待运行的任务 " + waitingTaskCount + " 个，需要一直运行的任务 " +
                     needRunningTaskCount + " 个，所以必须重启自动更新线程！！！已暂停等待执行任务 " + stopTaskCount + " 个");
         }else {
-            logger.info("线程池工作正常，正在等待运行的任务 " + waitingTaskCount + " 个");
+            logger.info("线程池工作正常， " + waitingTaskCount + " 个任务正在等待运行");
         }
     }
 

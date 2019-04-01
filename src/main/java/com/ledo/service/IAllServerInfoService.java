@@ -16,8 +16,6 @@ public interface IAllServerInfoService {
     void updateLinuxServerInfo();
     /** 查询Linux服务器相关信息 */
     ArrayList<AllServerInfo> referLinuxServerInfo();
-    /** 只更新Linux服务器在线人数信息 */
-    void onlyUpdateOnlineNumbersInfo();
     /** 只更新Linux服务器开服天数信息 */
     void onlyUpdateServerOpenDaysInfo();
     /** 查询所有服务器信息 */
