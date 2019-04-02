@@ -13,6 +13,7 @@
     <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
     <title>历史在线数据</title>
     <script type="text/javascript" src="../chartJS/echarts.js"></script>
+    <script type="text/javascript" src="../chartJS/WdatePicker.js"></script>
 </head>
 
 <style type="text/css">
@@ -130,7 +131,7 @@
 <h1 align="center" style="color: #4c4eed">《拳皇世界》服务器历史在线人数</h1>
 <div id="tips" style="margin-left: auto; opacity: 0.4;"><font size="2px">注：查询在线人数时，正数表示 > 负数表示 < </font></div>
 <form action="historyByCondition.do" method="post" style="opacity: 0.85">
-    <input type="text" id="queryDate" name="date" value="${historyInfo.date}" style="height:25px; width:165px" placeholder="日期 (支持日期串模糊查询)">
+    <input type="text" id="queryDate" name="date" class="Wdate" autocomplete="off" style="height:25px; width:150px" placeholder="支持日期串模糊查询" onFocus="WdatePicker({lang:'zh-cn',skin:'whyGreen',dateFmt:'yyyy-MM-dd HH:mm',hmsMenuCfg: {H: [1, 6], m: [10, 6]},minDate: '2018-09-30 18:12'})"/>
     <input type="text" id="queryOfficialNum" name="officialNum" value="${historyInfo.officialNum}" style="height:25px; width:150px" placeholder="官服">
     <input type="text" id="queryMixNum" name="mixNum" value="${historyInfo.mixNum}" style="height:25px; width:150px" placeholder="混服">
     <input type="text" id="queryGatNum" name="gatNum" value="${historyInfo.gatNum}" style="height:25px; width:150px" placeholder="港澳台">

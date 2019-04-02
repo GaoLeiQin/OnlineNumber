@@ -173,7 +173,7 @@ public class URLManager extends BaseManager{
             return;
         }
 
-        Collections.sort(allUrlContents, new Comparator<UrlContent>() {
+        allUrlContents.sort(new Comparator<UrlContent>() {
             @Override
             public int compare(UrlContent o1, UrlContent o2) {
                 if (o1.getOnlineNum() < o2.getOnlineNum()) {
