@@ -9,11 +9,21 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql"%>
 <html>
 <head>
+    <title>历史在线数据</title>
     <link rel="icon" href="../images/ad.jpg" type="image/x-icon">
     <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
-    <title>历史在线数据</title>
+
     <script type="text/javascript" src="../chartJS/echarts.js"></script>
-    <script type="text/javascript" src="../chartJS/WdatePicker.js"></script>
+    <script type="text/javascript" src="../chartJS/wdatepicker/WdatePicker.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="../chartJS/datatables-1.10.13/css/jquery.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="../chartJS/bootstrap-4.0.0/bootstrap.min.css">
+    <script type="text/javascript" charset="utf8" src="../chartJS/datatables-1.10.13/js/jquery.js"></script>
+    <script type="text/javascript" charset="utf8" src="../chartJS/datatables-1.10.13/js/jquery.dataTables.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="../chartJS/pace-master/themes/blue/pace-theme-loading-bar.css">
+    <script type="text/javascript" charset="utf8" src="../chartJS/pace-master/pace.js"></script>
+
 </head>
 
 <style type="text/css">
@@ -105,20 +115,21 @@
         background: #9bec36;
     }
 
-/*    .query {
-        background-color: #fdfb6d;
-        border: 2px;
-        color: #070707;
-        padding: 8px 18px;
-        text-align: center;
-        text-decoration: none;
-        font-size: 16px;
-        border-radius: 12px;
-        box-shadow: 0 8px 16px 0 rgba(48, 253, 29, 0.2), 0 6px 20px 0 rgba(248, 30, 16, 0.19);
-    }*/
+    /*    .query {
+            background-color: #fdfb6d;
+            border: 2px;
+            color: #070707;
+            padding: 8px 18px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px 0 rgba(48, 253, 29, 0.2), 0 6px 20px 0 rgba(248, 30, 16, 0.19);
+        }*/
 
     #historyData{
         float: left;
+        width: 800px;
     }
     #showCharts{
         float: right;
@@ -131,35 +142,38 @@
 <h1 align="center" style="color: #4c4eed">《拳皇世界》服务器历史在线人数</h1>
 <div id="tips" style="margin-left: auto; opacity: 0.4;"><font size="2px">注：查询在线人数时，正数表示 > 负数表示 < </font></div>
 <form action="historyByCondition.do" method="post" style="opacity: 0.85">
-    <input type="text" id="queryDate" name="date" class="Wdate" autocomplete="off" style="height:25px; width:150px" placeholder="支持日期串模糊查询" onFocus="WdatePicker({lang:'zh-cn',skin:'whyGreen',dateFmt:'yyyy-MM-dd HH:mm',hmsMenuCfg: {H: [1, 6], m: [10, 6]},minDate: '2018-09-30 18:12'})"/>
-    <input type="text" id="queryOfficialNum" name="officialNum" value="${historyInfo.officialNum}" style="height:25px; width:150px" placeholder="官服">
-    <input type="text" id="queryMixNum" name="mixNum" value="${historyInfo.mixNum}" style="height:25px; width:150px" placeholder="混服">
-    <input type="text" id="queryGatNum" name="gatNum" value="${historyInfo.gatNum}" style="height:25px; width:150px" placeholder="港澳台">
-    <input type="text" id="queryTotalNum" name="totalNum" value="${historyInfo.totalNum}" style="height:25px; width:150px" placeholder="全部"> &nbsp;
+    <input type="text" id="queryDate" name="date" class="Wdate" autocomplete="off" style="height:25px; width:260px" placeholder="支持日期串模糊查询" onFocus="WdatePicker({lang:'zh-cn',skin:'whyGreen',dateFmt:'yyyy-MM-dd HH:mm',hmsMenuCfg: {H: [1, 6], m: [10, 6]},minDate: '2018-09-30 18:12'})"/>
+    <input type="text" id="queryOfficialNum" name="officialNum" value="${historyInfo.officialNum}" style="height:25px; width:140px" placeholder="官服">&nbsp;
+    <input type="text" id="queryMixNum" name="mixNum" value="${historyInfo.mixNum}" style="height:25px; width:140px" placeholder="混服">&nbsp;
+    <input type="text" id="queryGatNum" name="gatNum" value="${historyInfo.gatNum}" style="height:25px; width:120px" placeholder="港澳台">
+    <input type="text" id="queryTotalNum" name="totalNum" value="${historyInfo.totalNum}" style="height:25px; width:100px" placeholder="全部"> &nbsp;
     <input class="query" type="submit" value="查 &nbsp; 询" />
 </form>
 
 <div id="historyData">
-<table border="3" width="770px">
-    <tr>
-        <th>日期</th>
-        <th>大陆官服</th>
-        <th>大陆混服</th>
-        <th>港澳台</th>
-        <th>全部</th>
-    </tr>
-    <c:forEach items="${serverHistoryInfos}" var="query">
+    <table id="serverHistoryInfo" class="table  table-bordered" width="100%" >
+        <thead style="position: center">
         <tr>
-            <td><c:out value="${query.date}"/></td>
-            <td><c:out value="${query.officialNum}"/></td>
-            <td><c:out value="${query.mixNum}"/></td>
-            <td><c:out value="${query.gatNum}"/></td>
-            <td><c:out value="${query.totalNum}"/></td>
+            <th>日期</th>
+            <th>大陆官服</th>
+            <th>大陆混服</th>
+            <th>港澳台</th>
+            <th>全部</th>
         </tr>
-    </c:forEach>
-</table>
+        </thead>
+        <tbody>
+        <c:forEach items="${serverHistoryInfos}" var="query">
+            <tr>
+                <td><c:out value="${query.date}"/></td>
+                <td><c:out value="${query.officialNum}"/></td>
+                <td><c:out value="${query.mixNum}"/></td>
+                <td><c:out value="${query.gatNum}"/></td>
+                <td><c:out value="${query.totalNum}"/></td>
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
 
-<br>
     <div id="page" style="margin-left: 13%">
         <label>第${page.currentPage}/${page.totalPage}页 共${page.totalRows}条</label>
         <a href="historyByCondition.do?currentPage=0&date=${historyInfo.date}&officialNum=${historyInfo.officialNum}&mixNum=${historyInfo.mixNum}&gatNum=${historyInfo.gatNum}&totalNum=${historyInfo.totalNum}">首页</a>
@@ -174,7 +188,66 @@
     </div>
 </div>
 
-<script type="text/javascript">
+<script id="showTables" type="text/javascript">
+
+    $(document).ready( function () {
+        $('#serverHistoryInfo').DataTable({
+/*            language: {
+                "info": "显示第 _START_ 到 _END_ 条记录 一共 _TOTAL_ 条记录",
+                "infoEmpty": "显示从 0 到 0 of 0 条记录",
+                "lengthMenu": "每页显示 _MENU_ 条记录",
+                "emptyTable": "查询无记录",
+                "loadingRecords": "加载中...",
+                "zeroRecords": "查询无记录",
+                "paginate": {
+                    "first": "首页",
+                    "previous": "上一页",
+                    "next": "下一页",
+                    "last": "末页"
+                }
+            },*/
+            language: {
+                "info": "",
+                "infoEmpty": "",
+                "lengthMenu": "",
+                "emptyTable": "查询无记录",
+                "loadingRecords": "加载中...",
+                "zeroRecords": "查询无记录",
+                "paginate": {
+                    "first": "",
+                    "previous": "",
+                    "next": "",
+                    "last": ""
+                }
+            },
+
+            createdRow: function (row, data, index) {
+                if (index == 0) {
+                    $('td', row).css('font-weight',"bold").css("color","#ef3b3f");
+                    $('td', row).css("background", "#d9dbd3");
+                }else if (index % 2 == 0) {
+                    $('td', row).css('font-weight',"bold").css("color","#6363ff");
+                    $('td', row).css("background", "#bcc4c0");
+                }else {
+                    $('td', row).css('font-weight',"bold").css("color","#fffcfc");
+                    $('td', row).css("background", "#30aa7b");
+                }
+            },
+
+            // 配置参数
+            paging: false,
+            serverSide: false,
+            autoWidth: true,
+            searching: false,
+            lengthMenu: [25, 50],
+            scrollY: "700px",
+            "order": [[0, "desc"]]
+        });
+    } );
+
+</script>
+
+<script id="pageUtil" type="text/javascript">
     function checkFirst(){
         if(${page.currentPage>1}){
             return true;
