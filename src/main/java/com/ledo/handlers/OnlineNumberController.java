@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * 访客主页面控制器
@@ -44,7 +45,7 @@ public class OnlineNumberController {
         }
         guestService.addGuestInfo(request, userName);
         ModelAndView mv = new ModelAndView();
-        ArrayList<UrlContent> allUrlContents = urlContentService.queryUrlContents();
+        List<UrlContent> allUrlContents = urlContentService.queryUrlContents();
         HashMap<String, ArrayList<UrlContent>> urlContentsMapByCondition = urlContentService.getURLContentsMapByCondition(allUrlContents);
         ArrayList<UrlContent> officialContents = new ArrayList<>();
         ArrayList<UrlContent> androidContents = new ArrayList<>();

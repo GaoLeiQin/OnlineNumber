@@ -11,6 +11,9 @@
     <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
     <title>服务器当前信息</title>
     <script type="text/javascript" src="../chartJS/echarts.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="../chartJS/pace-master/themes/green/pace-theme-center-atom.css">
+    <script type="text/javascript" charset="utf8" src="../chartJS/pace-master/pace.js"></script>
 </head>
 
 <style type="text/css">
@@ -127,8 +130,6 @@
 
 <body style="background: url(../images/kof_world_5.jpg); background-size: cover">
 
-<%--网页自动刷新的间隔时间--%>
-<%--<% response.setIntHeader("Refresh", 60 * 2); %>--%>
 <br>
 <h2 style="color: #2d57e5 " align="center">
         《拳皇世界》服务器 <fmt:formatDate value="<%=new Date() %>" pattern="yyyy-MM-dd HH:mm:ss"/> 在线信息</h2>

@@ -1,8 +1,13 @@
 package com.ledo.service;
 
+import com.ledo.beans.ServerHistoryInfo;
 import com.ledo.beans.UrlContent;
+import com.ledo.cache.ServerInfoCache;
+import com.ledo.cache.UrlCache;
+import com.ledo.cache.UrlCache.CacheUrlContent;
 import com.ledo.dao.IUrlContent;
 import com.ledo.manager.URLManager;
+import com.ledo.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -10,9 +15,11 @@ import org.springframework.stereotype.Service;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import static com.ledo.common.ThreadContant.SAVE_URLCONTENT_PERIOD;
 import static com.ledo.common.URLConstant.*;
 
 /**
@@ -27,8 +34,12 @@ public class UrlContentServiceImpl extends BaseService implements IUrlContentSer
     private IUrlContent urlContentDao;
 
     @Override
-    public ArrayList<UrlContent> queryUrlContents() {
-        ArrayList<UrlContent> contents = urlContentDao.queryUrlContents();
+    public List<UrlContent> queryUrlContents() {
+        CacheUrlContent cacheUrlContent = UrlCache.getInstance().getCacheUrlContent();
+        List<UrlContent> contents = cacheUrlContent.getAllUrlContents();
+        if (contents == null || DateUtil.getIntervalTime(cacheUrlContent.getTimestamp(), System.currentTimeMillis()) > SAVE_URLCONTENT_PERIOD) {
+            contents = urlContentDao.queryUrlContents();
+        }
         if (contents.size() < ONLINE_SERVER_SUM) {
             // 等待数据更新
             try {
@@ -42,7 +53,7 @@ public class UrlContentServiceImpl extends BaseService implements IUrlContentSer
     }
 
     @Override
-    public HashMap<String, ArrayList<UrlContent>> getURLContentsMapByCondition(ArrayList<UrlContent> urlContents) {
+    public HashMap<String, ArrayList<UrlContent>> getURLContentsMapByCondition(List<UrlContent> urlContents) {
         HashMap<String, ArrayList<UrlContent>> urlContentsMapByCondition = new HashMap<>();
         ArrayList<UrlContent> officialContents = new ArrayList<>();
         ArrayList<UrlContent> androidContents = new ArrayList<>();
@@ -75,20 +86,33 @@ public class UrlContentServiceImpl extends BaseService implements IUrlContentSer
     public void updateUrlContent() {
         urlContentDao.deleteUrlContent();
         boolean isGAT = false;
+        List<UrlContent> allUrlContents = new ArrayList<>();
         for (Map.Entry<String, URL> urls : URLManager.getInstance().getUrl().entrySet()) {
             if (GAT.equals(urls.getKey())) {
                 isGAT = true;
             }
             URL url = urls.getValue();
-            for (UrlContent urlContent : URLManager.getInstance().getUrlContents(url)) {
+            List<UrlContent> urlContents = URLManager.getInstance().getUrlContents(url);
+            allUrlContents.addAll(urlContents);
+            for (UrlContent urlContent : urlContents) {
                 if (isGAT) {
                     urlContent.setChannel("GAT_" + urlContent.getChannel());
                 }
                 urlContentDao.insertUrlContent(urlContent);
             }
         }
-
+        this.updateCache(allUrlContents);
         logger.warn("QHSJSERVERINFO " + urlContentDao.queryUrlContents());
+    }
+
+    /**
+     * 更新缓存信息
+     * @param allUrlContents
+     */
+    public void updateCache(List<UrlContent> allUrlContents) {
+        UrlCache.getInstance().setCacheUrlContent(UrlCache.getInstance().new CacheUrlContent(System.currentTimeMillis(), allUrlContents));
+        ServerInfoCache.getInstance().setServerHistoryInfo(new ServerHistoryInfo(DateUtil.getNowFormatDate(), urlContentDao.queryOfficialSum(),
+                urlContentDao.queryMixSum(), urlContentDao.queryGatSum(), urlContentDao.queryAllSum()));
     }
 
 }

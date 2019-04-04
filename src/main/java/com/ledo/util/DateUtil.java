@@ -82,7 +82,7 @@ public class DateUtil {
 
     /**
      * 获取当前距离整点（xx:x0:00）的时间
-     * @return xx分xx秒
+     * @return 毫秒数
      */
     public static long getWaitingLongTime(long integerNumber) {
         long remainSeconds = 0;
@@ -176,4 +176,23 @@ public class DateUtil {
         return new SimpleDateFormat(SIMPLE_DATE_PATTERN).format(calendar.getTime());
     }
 
+    /**
+     * 获取两个时间点的间隔时间
+     * @param startTime 日期格式：yyyy-MM-dd HH:mm:ss
+     * @param endTimePoint 日期毫秒数
+     * @return 间隔毫秒数
+     */
+    public static long getIntervalTime(String startTime, long endTimePoint) {
+        return getMilliSecondByFormatDate(startTime) - endTimePoint;
+    }
+
+    /**
+     * 获取两个时间点的间隔时间
+     * @param startTimePoint 日期毫秒数
+     * @param endTimePoint 日期毫秒数
+     * @return 毫秒数
+     */
+    public static long getIntervalTime(long startTimePoint, long endTimePoint) {
+        return startTimePoint - endTimePoint;
+    }
 }

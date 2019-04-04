@@ -168,7 +168,7 @@ public class URLManager extends BaseManager{
      * 根据在线人数对网页内容进行排序
      * @param allUrlContents
      */
-    public void sortAllUrlContensByOnlineNum(ArrayList<UrlContent> allUrlContents) {
+    public void sortAllUrlContensByOnlineNum(List<UrlContent> allUrlContents) {
         if (allUrlContents == null || allUrlContents.size() == 0) {
             return;
         }

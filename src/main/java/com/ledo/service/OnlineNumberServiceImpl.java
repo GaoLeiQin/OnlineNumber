@@ -2,6 +2,7 @@ package com.ledo.service;
 
 import com.ledo.beans.Page;
 import com.ledo.beans.ServerHistoryInfo;
+import com.ledo.cache.ServerInfoCache;
 import com.ledo.dao.IOnlineNumber;
 import com.ledo.dao.IUrlContent;
 import com.ledo.util.DateUtil;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+
+import static com.ledo.common.ThreadContant.SAVE_SERVER_INFO_PERIOD;
 
 /** 查询网页内容后分类显示
  * @author qgl
@@ -54,9 +57,11 @@ public class OnlineNumberServiceImpl extends BaseService implements IOnlineNumbe
 
     @Override
     public void addServerInfo() {
-        ServerHistoryInfo server = new ServerHistoryInfo(DateUtil.getNowFormatDate(), urlContentDao.queryOfficialSum(), urlContentDao.queryMixSum(),
-                urlContentDao.queryGatSum(), urlContentDao.queryAllSum());
-
+        ServerHistoryInfo server = ServerInfoCache.getInstance().getServerHistoryInfo();
+        if (server == null || DateUtil.getIntervalTime(server.getDate(), System.currentTimeMillis()) > SAVE_SERVER_INFO_PERIOD) {
+            server = new ServerHistoryInfo(DateUtil.getNowFormatDate(), urlContentDao.queryOfficialSum(), urlContentDao.queryMixSum(),
+                    urlContentDao.queryGatSum(), urlContentDao.queryAllSum());
+        }
         boolean isUrlContentNull = urlContentDao.queryOfficialSum() == null || urlContentDao.queryMixSum() == null ||
                 urlContentDao.queryGatSum() == null || urlContentDao.queryAllSum() == null;
         if (isUrlContentNull) {

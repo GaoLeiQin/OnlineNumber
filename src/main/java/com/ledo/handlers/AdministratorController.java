@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.ledo.common.ServerConstant.*;
 
@@ -112,7 +113,7 @@ public class AdministratorController {
     public ModelAndView AutoUpdateUrlContent(){
         ModelAndView mv = new ModelAndView();
         urlContentService.updateUrlContent();
-        ArrayList<UrlContent> serverInfos = urlContentService.queryUrlContents();
+        List<UrlContent> serverInfos = urlContentService.queryUrlContents();
         mv.addObject("serverInfos", serverInfos);
         mv.setViewName("autoUpdateUrlContent");
         return mv;

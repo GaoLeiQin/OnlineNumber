@@ -31,6 +31,12 @@
         text-align: center;
     }
 
+    input{
+        border-radius:6px;
+        border:2px solid #ccc;
+        height:35px;
+    }
+
     .query{
         display: inline-block;
         *display: inline;
@@ -140,19 +146,19 @@
 
 <body style="background: url(../images/ad_6.png); background-size: cover">
 <h1 align="center" style="color: #4c4eed">《拳皇世界》服务器历史在线人数</h1>
-<div id="tips" style="margin-left: auto; opacity: 0.4;"><font size="2px">注：查询在线人数时，正数表示 > 负数表示 < </font></div>
-<form action="historyByCondition.do" method="post" style="opacity: 0.85">
+<div id="tips" style="margin-right: 20px; opacity: 0.4;"><font size="2px">&nbsp; 注：查询在线人数时，正数表示 > 负数表示 < </font></div>
+<form action="historyByCondition.do" method="post" style="opacity: 0.85">&nbsp;
     <input type="text" id="queryDate" name="date" class="Wdate" autocomplete="off" style="height:25px; width:260px" placeholder="支持日期串模糊查询" onFocus="WdatePicker({lang:'zh-cn',skin:'whyGreen',dateFmt:'yyyy-MM-dd HH:mm',hmsMenuCfg: {H: [1, 6], m: [10, 6]},minDate: '2018-09-30 18:12'})"/>
-    <input type="text" id="queryOfficialNum" name="officialNum" value="${historyInfo.officialNum}" style="height:25px; width:140px" placeholder="官服">&nbsp;
-    <input type="text" id="queryMixNum" name="mixNum" value="${historyInfo.mixNum}" style="height:25px; width:140px" placeholder="混服">&nbsp;
+    <input type="text" id="queryOfficialNum" name="officialNum" value="${historyInfo.officialNum}" style="height:25px; width:140px" placeholder="官服">
+    <input type="text" id="queryMixNum" name="mixNum" value="${historyInfo.mixNum}" style="height:25px; width:140px" placeholder="混服">
     <input type="text" id="queryGatNum" name="gatNum" value="${historyInfo.gatNum}" style="height:25px; width:120px" placeholder="港澳台">
     <input type="text" id="queryTotalNum" name="totalNum" value="${historyInfo.totalNum}" style="height:25px; width:100px" placeholder="全部"> &nbsp;
     <input class="query" type="submit" value="查 &nbsp; 询" />
 </form>
 
 <div id="historyData">
-    <table id="serverHistoryInfo" class="table  table-bordered" width="100%" >
-        <thead style="position: center">
+    <table id="serverHistoryInfo" class="table table-striped table-bordered table-hover" width="100%" >
+        <thead>
         <tr>
             <th>日期</th>
             <th>大陆官服</th>
@@ -192,20 +198,6 @@
 
     $(document).ready( function () {
         $('#serverHistoryInfo').DataTable({
-/*            language: {
-                "info": "显示第 _START_ 到 _END_ 条记录 一共 _TOTAL_ 条记录",
-                "infoEmpty": "显示从 0 到 0 of 0 条记录",
-                "lengthMenu": "每页显示 _MENU_ 条记录",
-                "emptyTable": "查询无记录",
-                "loadingRecords": "加载中...",
-                "zeroRecords": "查询无记录",
-                "paginate": {
-                    "first": "首页",
-                    "previous": "上一页",
-                    "next": "下一页",
-                    "last": "末页"
-                }
-            },*/
             language: {
                 "info": "",
                 "infoEmpty": "",
