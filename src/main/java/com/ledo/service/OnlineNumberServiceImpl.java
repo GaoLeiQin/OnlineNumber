@@ -59,14 +59,18 @@ public class OnlineNumberServiceImpl extends BaseService implements IOnlineNumbe
     public void addServerInfo() {
         ServerHistoryInfo server = ServerInfoCache.getInstance().getServerHistoryInfo();
         if (server == null || DateUtil.getIntervalTime(server.getDate(), System.currentTimeMillis()) > SAVE_SERVER_INFO_PERIOD) {
+            logger.error(" 缓存过期，已过期的服务器在线人数信息缓存：" + server);
             server = new ServerHistoryInfo(DateUtil.getNowFormatDate(), urlContentDao.queryOfficialSum(), urlContentDao.queryMixSum(),
                     urlContentDao.queryGatSum(), urlContentDao.queryAllSum());
+        }else {
+            server.setDate(DateUtil.getNowFormatDate());
         }
         boolean isUrlContentNull = urlContentDao.queryOfficialSum() == null || urlContentDao.queryMixSum() == null ||
                 urlContentDao.queryGatSum() == null || urlContentDao.queryAllSum() == null;
         if (isUrlContentNull) {
             logger.error(" &$& 删除数据库，网页访问为空的数据：" + server);
         }
+
         onlineNumberDao.insertServerInfo(server);
     }
 

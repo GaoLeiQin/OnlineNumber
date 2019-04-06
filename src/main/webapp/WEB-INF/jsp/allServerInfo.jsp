@@ -83,15 +83,15 @@
 <br>
 
 <form action="queryServerInfoByCondition.do" method="post" style="opacity: 0.88"> &nbsp; &nbsp;
-    <input type="text" name="channel" value="${serverInfo.channel}" style="height:25px; width:150px" placeholder="渠道名称" >
-    <input type="text" name="zoneId" value="${serverInfo.zoneId}" style="height:25px; width:150px" placeholder="ZoneId">
-    <input type="text" name="serverName" value="${serverInfo.serverName}" style="height:25px; width:150px" placeholder="服务器名称">
-    <input type="text" name="optOrId" value="${serverInfo.optOrId}" style="height:25px; width:150px" placeholder="OptOrId">
-    <input type="text" name="innerIp" value="${serverInfo.innerIp}" style="height:25px; width:150px" placeholder="内网IP">
-    <input type="text" name="outerIp" value="${serverInfo.outerIp}" style="height:25px; width:150px" placeholder="外网IP">
-    <input type="text" name="hostName" value="${serverInfo.hostName}" style="height:25px; width:150px" placeholder="主机名">
-    <input type="text" name="openTime" value="${serverInfo.openTime}" style="height:25px; width:150px" placeholder="开服时间" >
-    <input type="text" name="openDays" value="${serverInfo.openDays}" style="height:25px; width:200px" placeholder="开服天数:正数 > 负数 <" >
+    <input type="text" name="channel" value="${serverInfo.channel}" style="height:30px; width:150px" placeholder="渠道名称" >
+    <input type="text" name="zoneId" value="${serverInfo.zoneId}" style="height:30px; width:150px" placeholder="ZoneId">
+    <input type="text" name="serverName" value="${serverInfo.serverName}" style="height:30px; width:150px" placeholder="服务器名称">
+    <input type="text" name="optOrId" value="${serverInfo.optOrId}" style="height:30px; width:150px" placeholder="OptOrId">
+    <input type="text" name="innerIp" value="${serverInfo.innerIp}" style="height:30px; width:150px" placeholder="内网IP">
+    <input type="text" name="outerIp" value="${serverInfo.outerIp}" style="height:30px; width:150px" placeholder="外网IP">
+    <input type="text" name="hostName" value="${serverInfo.hostName}" style="height:30px; width:150px" placeholder="主机名">
+    <input type="text" name="openTime" value="${serverInfo.openTime}" style="height:30px; width:150px" placeholder="开服时间" >
+    <input type="text" name="openDays" value="${serverInfo.openDays}" style="height:30px; width:200px" placeholder="开服天数:正数 > 负数 <" >
     <input class="query" type="submit" value="查 &nbsp; 询" />
 </form>
 

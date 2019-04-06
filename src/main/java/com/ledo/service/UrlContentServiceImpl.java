@@ -38,6 +38,7 @@ public class UrlContentServiceImpl extends BaseService implements IUrlContentSer
         CacheUrlContent cacheUrlContent = UrlCache.getInstance().getCacheUrlContent();
         List<UrlContent> contents = cacheUrlContent.getAllUrlContents();
         if (contents == null || DateUtil.getIntervalTime(cacheUrlContent.getTimestamp(), System.currentTimeMillis()) > SAVE_URLCONTENT_PERIOD) {
+            logger.error(" 缓存过期，已过期的网页内容缓存时间：" + DateUtil.getFormatDateByMillSecond(cacheUrlContent.getTimestamp()));
             contents = urlContentDao.queryUrlContents();
         }
         if (contents.size() < ONLINE_SERVER_SUM) {
@@ -109,7 +110,7 @@ public class UrlContentServiceImpl extends BaseService implements IUrlContentSer
      * 更新缓存信息
      * @param allUrlContents
      */
-    public void updateCache(List<UrlContent> allUrlContents) {
+    private void updateCache(List<UrlContent> allUrlContents) {
         UrlCache.getInstance().setCacheUrlContent(UrlCache.getInstance().new CacheUrlContent(System.currentTimeMillis(), allUrlContents));
         ServerInfoCache.getInstance().setServerHistoryInfo(new ServerHistoryInfo(DateUtil.getNowFormatDate(), urlContentDao.queryOfficialSum(),
                 urlContentDao.queryMixSum(), urlContentDao.queryGatSum(), urlContentDao.queryAllSum()));
