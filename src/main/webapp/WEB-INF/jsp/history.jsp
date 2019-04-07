@@ -31,6 +31,10 @@
         text-align: center;
     }
 
+    th {
+        text-align: center;
+    }
+
     input{
         border-radius:6px;
         border:2px solid #ccc;
@@ -137,6 +141,7 @@
         float: left;
         width: 800px;
     }
+
     #showCharts{
         float: right;
         width: 1000px;
@@ -214,10 +219,10 @@
             },
 
             createdRow: function (row, data, index) {
-                if (index == 0) {
+                if (index === 0) {
                     $('td', row).css('font-weight',"bold").css("color","#ef3b3f");
                     $('td', row).css("background", "#d9dbd3");
-                }else if (index % 2 == 0) {
+                }else if (index % 2 === 0) {
                     $('td', row).css('font-weight',"bold").css("color","#6363ff");
                     $('td', row).css("background", "#bcc4c0");
                 }else {
@@ -274,7 +279,7 @@
             return false;
         }
 
-        if (turnPage == null || "" == turnPage) {
+        if (turnPage == null || "" === turnPage) {
             alert("服务器差点就崩溃了，页数不能为空呀！");
             return false;
         }

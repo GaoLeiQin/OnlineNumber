@@ -23,7 +23,7 @@ public class URLConstant {
     /** Socket 超时时间 50 s，因为网页内容每分钟更新一次，每次更新需要3秒左右*/
     public static final int SOCKET_TIMEOUT = 50 * 1000;
     /** 在线服务器的最少数目 */
-    public static final int ONLINE_SERVER_SUM = 50;
+    public static final int ONLINE_SERVER_SUM = 40;
     /** 本机的IP */
     public static final String LOCAL_HOST_IP = "127.0.0.1";
     /** Http请求头中Referer参数表示上一次请求网页的地址 */

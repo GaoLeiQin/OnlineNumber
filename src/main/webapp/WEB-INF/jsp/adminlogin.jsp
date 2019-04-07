@@ -3,7 +3,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-    <title>登录</title>
+    <title>管理员登录</title>
     <link rel="icon" href="/KofWorld/images/login.png" type="image/x-icon"/>
     <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
     <script type="text/javascript" src="/KofWorld/chartJS/jquery.min.js"></script>

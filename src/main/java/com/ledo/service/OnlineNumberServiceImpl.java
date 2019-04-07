@@ -65,10 +65,10 @@ public class OnlineNumberServiceImpl extends BaseService implements IOnlineNumbe
         }else {
             server.setDate(DateUtil.getNowFormatDate());
         }
-        boolean isUrlContentNull = urlContentDao.queryOfficialSum() == null || urlContentDao.queryMixSum() == null ||
-                urlContentDao.queryGatSum() == null || urlContentDao.queryAllSum() == null;
-        if (isUrlContentNull) {
-            logger.error(" &$& 删除数据库，网页访问为空的数据：" + server);
+        boolean isNull = server.getDate() == null || server.getTotalNum() == null || server.getGatNum() == null ||
+                server.getOfficialNum() == null || server.getMixNum() == null;
+        if (isNull) {
+            logger.error(" &$& 服务器在线人数信息为空的数据：" + server);
         }
 
         onlineNumberDao.insertServerInfo(server);

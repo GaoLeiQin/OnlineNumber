@@ -20,8 +20,22 @@
 </head>
 
 <style type="text/css">
+    th {
+        text-align: center;
+    }
+
     td {
         text-align: center;
+    }
+
+    /* dataTables 表格内容居中 */
+    .table>tbody>tr>td{
+        text-align:center;
+    }
+
+    /* dataTables 表头居中 */
+    .table>thead:first-child>tr:first-child>th{
+        text-align:center;
     }
 
     input{
@@ -146,12 +160,18 @@
             },
 
             createdRow: function (row, data, index) {
-                if (index % 2 == 0) {
-                    $('td', row).css('font-weight',"bold").css("color","#6363ff");
+                if (data[0] === "LEDO") {
+                    $('td', row).css('font-weight', "bold").css("color", "#6363ff");
                     $('td', row).css("background", "#bcc4c0");
-                }else {
-                    $('td', row).css('font-weight',"bold").css("color","#fffcfc");
+                } else if (data[0] === "混服") {
+                    $('td', row).css('font-weight', "bold").css("color", "#fffcfc");
                     $('td', row).css("background", "#30aa7b");
+                } else if (data[0] === "硬核") {
+                    $('td', row).css('font-weight', "bold").css("color", "#fffcfc");
+                    $('td', row).css("background", "#42aa5d");
+                } else {
+                    $('td', row).css('font-weight', "bold").css("color", "#fffcfc");
+                    $('td', row).css("background", "#aa8b0a");
                 }
             },
 
@@ -161,6 +181,7 @@
             serverSide: false,
             autoWidth: false,
             lengthMenu: [15, 30, 45, 60],
+            order: [[0, "desc"]]
 
         });
     } );

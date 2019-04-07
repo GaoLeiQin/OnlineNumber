@@ -183,7 +183,7 @@ public class DateUtil {
      * @return 间隔毫秒数
      */
     public static long getIntervalTime(String startTime, long endTimePoint) {
-        return getMilliSecondByFormatDate(startTime) - endTimePoint;
+        return endTimePoint - getMilliSecondByFormatDate(startTime);
     }
 
     /**
@@ -193,6 +193,6 @@ public class DateUtil {
      * @return 毫秒数
      */
     public static long getIntervalTime(long startTimePoint, long endTimePoint) {
-        return startTimePoint - endTimePoint;
+        return endTimePoint - startTimePoint;
     }
 }

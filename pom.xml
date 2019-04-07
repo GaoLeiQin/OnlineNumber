@@ -21,7 +21,7 @@
     <pagehelper.version>5.1.2-beta</pagehelper.version>
     <mysql.version>5.1.7</mysql.version>
     <mybatis.spring.version>1.2.3</mybatis.spring.version>
-    <mybatis.version>3.1.1</mybatis.version>
+    <mybatis.version>3.4.5</mybatis.version>
     <junit.version>4.11</junit.version>
     <jstl.version>1.2</jstl.version>
     <jsqlparser.version>1.0</jsqlparser.version>
@@ -195,6 +195,13 @@
           <version>2.5.0</version>
       </dependency>
 
+      <dependency>
+          <groupId>com.alibaba</groupId>
+          <artifactId>druid</artifactId>
+          <version>1.1.10</version>
+      </dependency>
+
+
   </dependencies>
 
     <build>
@@ -283,17 +290,4 @@
         </resources>
     </build>
 
-    <repositories>
-        <repository>
-            <id>nexus-aliyun</id>
-            <name>nexus-aliyun</name>
-            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
 </project>
