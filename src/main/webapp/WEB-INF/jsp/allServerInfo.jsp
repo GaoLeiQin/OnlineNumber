@@ -100,7 +100,7 @@
     <input type="text" name="channel" value="${serverInfo.channel}" style="height:30px; width:150px" placeholder="渠道名称" >
     <input type="text" name="zoneId" value="${serverInfo.zoneId}" style="height:30px; width:150px" placeholder="ZoneId">
     <input type="text" name="serverName" value="${serverInfo.serverName}" style="height:30px; width:150px" placeholder="服务器名称">
-    <input type="text" name="optOrId" value="${serverInfo.optOrId}" style="height:30px; width:150px" placeholder="OptOrId">
+    <input type="text" name="optOrId" value="${serverInfo.optOrId}" style="height:30px; width:150px" placeholder="Opt（废弃）">
     <input type="text" name="innerIp" value="${serverInfo.innerIp}" style="height:30px; width:150px" placeholder="内网IP">
     <input type="text" name="outerIp" value="${serverInfo.outerIp}" style="height:30px; width:150px" placeholder="外网IP">
     <input type="text" name="hostName" value="${serverInfo.hostName}" style="height:30px; width:150px" placeholder="主机名">
@@ -115,7 +115,7 @@
         <th>渠道</th>
         <th>ZoneId</th>
         <th>服务器名称</th>
-        <th>Opt Or ID</th>
+        <th>Opt（废弃）</th>
         <th>内网IP</th>
         <th>外网IP</th>
         <th>HostName</th>

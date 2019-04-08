@@ -114,7 +114,6 @@ public class AllServerInfoServiceImpl extends BaseService implements IAllServerI
             }
         }else {
             logger.error("更新Linux信息失败，新开服:" + zoneId + " " + serverName);
-            allServerDao.insertLinuxServerInfo(new AllServerInfo(channel, zoneId, serverName, optOrId, "新开服", "Opt Or ID、IP、HostName待更新", " - ", openTime, openDays));
         }
     }
 

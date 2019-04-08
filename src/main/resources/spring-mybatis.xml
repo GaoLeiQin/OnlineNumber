@@ -46,12 +46,13 @@
 
     <!-- 注册SqlSessionFactory -->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <property name="configLocation" value="classpath:mybatis.xml"/>
+        <property name="typeAliasesPackage" value="com.ledo.beans"/>
         <property name="dataSource" ref="dataSource"/>
     </bean>
 
     <!-- 生成Dao的代理对象 -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!-- 等待SqlSessionFactoryBean类实例化，而ref直接引用，DataSource可能还没有完成实例化 （自动注入） -->
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
         <property name="basePackage" value="com.ledo.dao"/>
     </bean>

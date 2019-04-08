@@ -3,12 +3,12 @@
 PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
 	<!-- 为实体类指定别名 -->
-	<typeAliases>
+<!--	<typeAliases>
 		<package name="com.ledo.beans"/>
-	</typeAliases>
+	</typeAliases>-->
 	
 	<!-- 注册映射文件 -->
-	<mappers>
+<!--	<mappers>
 		<package name="com.ledo.dao"/>
-	</mappers>
+	</mappers>-->
 </configuration>
